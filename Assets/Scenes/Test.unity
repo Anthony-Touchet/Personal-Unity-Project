@@ -210,7 +210,7 @@ MonoBehaviour:
     line: Enemy Detected!!
   - sourceClip: {fileID: 8300000, guid: c618556d934273048b97fdef6ac9dfd5, type: 3}
     line: 
-  waitAfterLine: 1
+  waitAfterLine: 2
 --- !u!82 &58403964
 AudioSource:
   m_ObjectHideFlags: 0
@@ -221,7 +221,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

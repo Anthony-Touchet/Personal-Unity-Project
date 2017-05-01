@@ -1,17 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Line
+[Serializable]
+public class Line
 {
     public AudioClip sourceClip;
     public string line;
 
-    public virtual void Play(string text) {}
+    public virtual void Play(string text) { }
 }
 
-public class InstantLine : Line { }
-
+[Serializable]
 public class BranchingLine : Line
 {
     public class ReactionLine

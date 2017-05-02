@@ -8,6 +8,7 @@ public class Line
 {
     public AudioClip sourceClip;
     public string line;
+    public uint index;
 }
 
 [Serializable]

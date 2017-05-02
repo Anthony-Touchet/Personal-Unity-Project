@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,104 +11,125 @@ public class Conversation : MonoBehaviour
     private AudioSource m_AudioSource;
     private Line m_CurrentLine;
     private float m_Timer;
-    private bool done;
-    private bool choiceWaiting;
+    private bool m_Done;
+    private bool m_ChoiceWaiting;
     private GameObject m_DialogueScreen;
+    private List<Line> m_AllLines = new List<Line>();
+
+    private IEnumerator corutineEnumerator;
 
     public List<Line> conversationLines;
     public List<BranchingLine> brancingLine;
     public float waitAfterLine;
+    public Text lineText;
 
-    void Awake()
+    private void Awake()
     {
+        m_AllLines.AddRange(conversationLines);
+        foreach (var bl in brancingLine)
+        {
+            m_AllLines.Add(bl);
+        }
+
+        m_AllLines = m_AllLines.OrderBy(l => l.index).ToList();
+
         m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
         m_Timer = waitAfterLine;
         m_AudioSource = GetComponent<AudioSource>();
-        if (conversationLines.Count == 0)
+        if (m_AllLines.Count == 0)
         {
             Destroy(gameObject);
             return;
         }
-        m_CurrentLine = conversationLines[0];
-        PlayLine();
+
+        m_CurrentLine = m_AllLines[0];
+        PlayLine(m_CurrentLine);
+        corutineEnumerator = DialogueCoRutine();
     }
 	
 	private void Update()
 	{
-        //Check to see if we should speak
-        if (done)
-            return;
 
-        //If the Audio is playing, Don't worry
-        if (m_AudioSource.isPlaying)
-            return;
+	    if(corutineEnumerator != null && !m_ChoiceWaiting)
+            corutineEnumerator.MoveNext();
+    }
 
-	    if (m_CurrentLine.GetType() == typeof(BranchingLine) && choiceWaiting)
-	    {
-
-	        return;
-	    }
-
-        // If it is not playing, count down
-        if (m_Timer > 0)
+    private IEnumerator DialogueCoRutine()
+    {
+        while (!m_Done)
         {
-            m_Timer -= Time.deltaTime;
-            return;
-        }
+            //If the Audio is playing, Don't worry
+            while(m_AudioSource.isPlaying)
+                yield return null;
 
-        // After countdown, reset timer
-        m_Timer = waitAfterLine;
-
-        for (var i = 0; i < conversationLines.Count; i++)
-        {
-            if (conversationLines[i] == m_CurrentLine && i + 1 != conversationLines.Count)
+            // If it is not playing, count down
+            while (m_Timer > 0)
             {
-                m_CurrentLine = conversationLines[i + 1];
+                m_Timer -= Time.deltaTime;
+                yield return null;
+            }
+
+            // After countdown, reset timer
+            m_Timer = waitAfterLine;
+
+            for (var i = 0; i < m_AllLines.Count; i++)
+            {
+                if (m_AllLines[i] == m_CurrentLine && i + 1 != m_AllLines.Count)
+                {
+                    m_CurrentLine = m_AllLines[i + 1];
+                    break;
+                }
+
+                if (i + 1 < m_AllLines.Count) continue;
+
+                m_CurrentLine = null;
+                m_AudioSource.clip = null;
+                m_Done = true;
                 break;
             }
 
-            if (i + 1 < conversationLines.Count) continue;
+            if (m_Done)
+                break;
 
-            m_CurrentLine = null;
-            m_AudioSource.clip = null;
-            done = true;
-            return;
-        }
+            // If the next line is a line, set it up, else
+            if (m_CurrentLine.GetType() == typeof(Line))
+            {
+                PlayLine(m_CurrentLine);
+            }
 
-        // If the next line is a line, set it up, else
-        if (m_CurrentLine.GetType() == typeof(Line))
-        {
-            PlayLine();
+            else if (m_CurrentLine.GetType() == typeof(BranchingLine))
+            {
+                PlayLine(m_CurrentLine);
+                PopulateButtons((BranchingLine)m_CurrentLine);
+                m_ChoiceWaiting = true;
+            }
         }
-
-        else if (m_CurrentLine.GetType() == typeof(BranchingLine))
-        {
-            PlayLine();
-        }
+        yield return null;
     }
 
     // Dialogue can now be restarted.
     [ContextMenu("Restart")]
     public void RestartDialogue()
     {
-        m_CurrentLine = conversationLines[0];
-        done = false;
-        PlayLine();
+        m_CurrentLine = m_AllLines[0];
+        m_Done = false;
+        PlayLine(m_CurrentLine);
     }
 
-    private void PlayLine()
+    private void PlayLine(Line line)
     {
-        m_AudioSource.clip = m_CurrentLine.sourceClip;
+        lineText.text = line.line;
+        m_AudioSource.clip = line.sourceClip;
         m_AudioSource.Play();
     }
 
     [ContextMenu("Spawn Button")]
-    private void PopulateButtons(/*BranchingLine pLine*/)
+    private void PopulateButtons(BranchingLine pLine)
     {
         m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
 
-        float spacing = 1f;
-        foreach (var line in brancingLine[0].reactions)
+        var spacing = 1f;
+        foreach (var reaction in pLine.reactions)
         {
             var buttonGameObject = Instantiate(Resources.Load("LineButton")) as GameObject;
             var buttonTransform = buttonGameObject.GetComponent<RectTransform>();
@@ -121,13 +143,13 @@ public class Conversation : MonoBehaviour
             buttonTransform.offsetMax = Vector2.zero;
             buttonTransform.offsetMin = Vector2.zero;
 
-            buttonTransform.GetComponentInChildren<Text>().text = line.initalLine.line;
+            buttonTransform.GetComponentInChildren<Text>().text = reaction.initalLine.line;
+            var reaction1 = reaction;
             buttonGameObject.GetComponent<Button>().onClick.AddListener(() =>
             {
-                // TODO: Put what happens when the button is pressed here
+                PlayLine(reaction1.reactionLine);
+                m_ChoiceWaiting = false;
             });
         }
     }
 }
-
-

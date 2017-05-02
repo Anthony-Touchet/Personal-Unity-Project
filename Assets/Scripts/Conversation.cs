@@ -9,9 +9,10 @@ public class Conversation : MonoBehaviour
     private AudioSource m_AudioSource;
     private Line m_CurrentLine;
     private float m_Timer;
-    private IEnumerator corutine;
+    private bool done;
 
     public List<Line> conversationLines;
+    public List<BranchingLine> brancingLine;
     public float waitAfterLine;
 
     void Awake()
@@ -24,88 +25,71 @@ public class Conversation : MonoBehaviour
             return;
         }
         m_CurrentLine = conversationLines[0];
-        m_AudioSource.clip = m_CurrentLine.sourceClip;
-        m_AudioSource.Play();
-        //corutine = DialogueCoRutine();
+        PlayLine();
     }
 	
-	void Update()
-    {
+	private void Update()
+	{
+        //Check to see if we should speak
+        if (done)
+            return;
+
+        //If the Audio is playing, Don't worry
         if (m_AudioSource.isPlaying)
             return;
 
-        m_Timer -= Time.deltaTime;
+        // If it is not playing, count down
         if (m_Timer > 0)
+        {
+            m_Timer -= Time.deltaTime;
             return;
+        }
 
+        // After countdown, reset timer
         m_Timer = waitAfterLine;
 
-        if (m_CurrentLine.GetType() == typeof(Line))
+        for (var i = 0; i < conversationLines.Count; i++)
         {
-            for (var i = 0; i < conversationLines.Count; i++)
+            if (conversationLines[i] == m_CurrentLine && i + 1 != conversationLines.Count)
             {
-                if (conversationLines[i] == m_CurrentLine && i + 1 != conversationLines.Count)
-                {
-                    m_CurrentLine = conversationLines[i + 1];
-                    break;
-                }
-
-                if (i + 1 != conversationLines.Count) continue;
-
-                m_CurrentLine = conversationLines[0];
+                m_CurrentLine = conversationLines[i + 1];
                 break;
             }
 
-            m_AudioSource.clip = m_CurrentLine.sourceClip;
-            m_AudioSource.Play();
+            if (i + 1 < conversationLines.Count) continue;
+
+            m_CurrentLine = null;
+            m_AudioSource.clip = null;
+            done = true;
+            return;
+        }
+
+        // If the next line is a line, set it up, else
+        if (m_CurrentLine.GetType() == typeof(Line))
+        {
+            PlayLine();
         }
 
         else if (m_CurrentLine.GetType() == typeof(BranchingLine))
         {
 
         }
-
-        //if(corutine != null)
-        //corutine.MoveNext();
     }
 
-    //private IEnumerator DialogueCoRutine()
-    //{
-    //    while (true)
-    //    {
-    //        if (m_AudioSource.isPlaying)
-    //            return null;
+    // Dialogue can now be restarted.
+    [ContextMenu("Restart")]
+    public void RestartDialogue()
+    {
+        m_CurrentLine = conversationLines[0];
+        done = false;
+        PlayLine();
+    }
 
-    //        m_Timer -= Time.deltaTime;
-    //        if (m_Timer > 0)
-    //            return null;
-
-    //        m_Timer = waitAfterLine;
-
-    //        m_AudioSource.clip = m_CurrentLine.sourceClip;
-    //        m_AudioSource.Play();
-
-    //        if (m_CurrentLine.GetType() == typeof(Line))
-    //        {
-    //            for (var i = 0; i < conversationLines.Count; i++)
-    //            {
-    //                if (conversationLines[i] == m_CurrentLine && i + 1 != conversationLines.Count)
-    //                {
-    //                    m_CurrentLine = conversationLines[i + 1];
-    //                    break;
-    //                }
-
-    //                if (i + 1 != conversationLines.Count) continue;
-
-    //                m_CurrentLine = conversationLines[0];
-    //                break;
-    //            }
-    //        }
-
-    //        else if (m_CurrentLine.GetType() == typeof(BranchingLine))
-    //        {
-
-    //        }
-    //    }
-    //}
+    private void PlayLine()
+    {
+        m_AudioSource.clip = m_CurrentLine.sourceClip;
+        m_AudioSource.Play();
+    }
 }
+
+

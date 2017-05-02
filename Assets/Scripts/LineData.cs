@@ -8,13 +8,12 @@ public class Line
 {
     public AudioClip sourceClip;
     public string line;
-
-    public virtual void Play(string text) { }
 }
 
 [Serializable]
 public class BranchingLine : Line
 {
+    [Serializable]
     public class ReactionLine
     {
         public Line initalLine;
@@ -22,11 +21,6 @@ public class BranchingLine : Line
     }
 
     public List<ReactionLine> reactionLines = new List<ReactionLine>();
-
-    public override void Play(string text)
-    {
-        
-    }
 
     public void PlayChoice(int choice, string text)
     {

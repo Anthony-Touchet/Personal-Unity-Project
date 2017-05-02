@@ -14,13 +14,13 @@ public class Line
 public class BranchingLine : Line
 {
     [Serializable]
-    public class ReactionLine
+    public class Reaction
     {
         public Line initalLine;
         public Line reactionLine;
     }
 
-    public List<ReactionLine> reactionLines = new List<ReactionLine>();
+    public List<Reaction> reactions = new List<Reaction>();
 
     public void PlayChoice(int choice, string text)
     {

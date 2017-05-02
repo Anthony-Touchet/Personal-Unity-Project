@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(AudioSource))]
 public class Conversation : MonoBehaviour
@@ -10,6 +11,8 @@ public class Conversation : MonoBehaviour
     private Line m_CurrentLine;
     private float m_Timer;
     private bool done;
+    private bool choiceWaiting;
+    private GameObject m_DialogueScreen;
 
     public List<Line> conversationLines;
     public List<BranchingLine> brancingLine;
@@ -17,6 +20,7 @@ public class Conversation : MonoBehaviour
 
     void Awake()
     {
+        m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
         m_Timer = waitAfterLine;
         m_AudioSource = GetComponent<AudioSource>();
         if (conversationLines.Count == 0)
@@ -37,6 +41,12 @@ public class Conversation : MonoBehaviour
         //If the Audio is playing, Don't worry
         if (m_AudioSource.isPlaying)
             return;
+
+	    if (m_CurrentLine.GetType() == typeof(BranchingLine) && choiceWaiting)
+	    {
+
+	        return;
+	    }
 
         // If it is not playing, count down
         if (m_Timer > 0)
@@ -72,7 +82,7 @@ public class Conversation : MonoBehaviour
 
         else if (m_CurrentLine.GetType() == typeof(BranchingLine))
         {
-
+            PlayLine();
         }
     }
 
@@ -89,6 +99,34 @@ public class Conversation : MonoBehaviour
     {
         m_AudioSource.clip = m_CurrentLine.sourceClip;
         m_AudioSource.Play();
+    }
+
+    [ContextMenu("Spawn Button")]
+    private void PopulateButtons(/*BranchingLine pLine*/)
+    {
+        m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
+
+        float spacing = 1f;
+        foreach (var line in brancingLine[0].reactions)
+        {
+            var buttonGameObject = Instantiate(Resources.Load("LineButton")) as GameObject;
+            var buttonTransform = buttonGameObject.GetComponent<RectTransform>();
+            buttonGameObject.transform.SetParent(m_DialogueScreen.transform);
+
+            spacing -= .01f;
+            buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, spacing);
+            spacing -= .06f;
+            buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, spacing);
+
+            buttonTransform.offsetMax = Vector2.zero;
+            buttonTransform.offsetMin = Vector2.zero;
+
+            buttonTransform.GetComponentInChildren<Text>().text = line.initalLine.line;
+            buttonGameObject.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                // TODO: Put what happens when the button is pressed here
+            });
+        }
     }
 }
 

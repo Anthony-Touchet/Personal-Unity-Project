@@ -301,10 +301,10 @@ MonoBehaviour:
   conversationLines:
   - sourceClip: {fileID: 8300000, guid: 62d2682d8840dd04ba7cb7bbb6a046e0, type: 3}
     line: Engage
-    index: 0
+    index: 1
   - sourceClip: {fileID: 8300000, guid: 0ec3aee70a85fef4abbeec5710031a3c, type: 3}
     line: Enemy Detected!!
-    index: 1
+    index: 0
   - sourceClip: {fileID: 8300000, guid: c618556d934273048b97fdef6ac9dfd5, type: 3}
     line: Not responsible.
     index: 3

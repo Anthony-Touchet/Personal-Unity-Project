@@ -18,10 +18,15 @@ public class Conversation : MonoBehaviour
 
     private IEnumerator corutineEnumerator;
 
-    public List<Line> conversationLines;
-    public List<BranchingLine> brancingLine;
+    public float lineChoiceSpacing;
+    [Range(0, 1)]
+    public float lineChoiceSize;
     public float waitAfterLine;
     public Text lineText;
+
+    [Space]
+    public List<Line> conversationLines;
+    public List<BranchingLine> brancingLine;
 
     private void Awake()
     {
@@ -128,27 +133,48 @@ public class Conversation : MonoBehaviour
     {
         m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
 
-        var spacing = 1f;
+        foreach (Transform go in m_DialogueScreen.transform)
+        {
+            Destroy(go.gameObject);
+        }
+
+        var textPlacement = 1f;
         foreach (var reaction in pLine.reactions)
         {
             var buttonGameObject = Instantiate(Resources.Load("LineButton")) as GameObject;
             var buttonTransform = buttonGameObject.GetComponent<RectTransform>();
             buttonGameObject.transform.SetParent(m_DialogueScreen.transform);
 
-            spacing -= .01f;
-            buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, spacing);
-            spacing -= .06f;
-            buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, spacing);
+            textPlacement -= lineChoiceSpacing;
+            buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, textPlacement);
+            textPlacement -= lineChoiceSize;
+            buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, textPlacement);
 
             buttonTransform.offsetMax = Vector2.zero;
             buttonTransform.offsetMin = Vector2.zero;
 
             buttonTransform.GetComponentInChildren<Text>().text = reaction.initalLine.line;
             var reaction1 = reaction;
-            buttonGameObject.GetComponent<Button>().onClick.AddListener(() =>
+            var buttonComponet = buttonGameObject.GetComponent<Button>();
+            buttonComponet.onClick.AddListener(() =>
             {
                 PlayLine(reaction1.reactionLine);
                 m_ChoiceWaiting = false;
+                foreach (Transform go in m_DialogueScreen.transform)
+                {
+                    if (go != buttonTransform)
+                        Destroy(go.gameObject);
+                    else
+                    {
+                        buttonComponet.onClick.RemoveAllListeners();
+                        buttonComponet.interactable = false;
+
+                        buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, 0.5f +
+                            lineChoiceSize / 2);
+                        buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, 0.5f - 
+                            lineChoiceSize / 2);
+                    }
+                }
             });
         }
     }

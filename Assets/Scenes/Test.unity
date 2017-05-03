@@ -758,25 +758,34 @@ MonoBehaviour:
         sourceClip: {fileID: 8300000, guid: d13b259c9ba2e6c4cb2cc71d0635e857, type: 3}
         line: (Completion)
         index: 0
-  - sourceClip: {fileID: 8300000, guid: 752df164f3c781c4eadaabdf854c5d94, type: 3}
-    line: (Machine noises)
-    index: 4
-    reactions:
+  hubLines:
+  - sourceClip: {fileID: 8300000, guid: ae0c598be101fdf488419b52979e1125, type: 3}
+    line: Help us human...
+    index: 5
+    choicesList:
     - initalLine:
         sourceClip: {fileID: 0}
-        line: Suck it
+        line: (Laugh)
         index: 0
       reactionLine:
-        sourceClip: {fileID: 8300000, guid: 23a6bf4c0eddcdb4983b72a83e282c28, type: 3}
-        line: Yeah ok Whatever.
+        sourceClip: {fileID: 8300000, guid: 4d3580915eff59145be1efd15640dae4, type: 3}
+        line: (the computer laughs at you)
         index: 0
     - initalLine:
         sourceClip: {fileID: 0}
-        line: Helloooooo
+        line: No
         index: 0
       reactionLine:
-        sourceClip: {fileID: 8300000, guid: d13b259c9ba2e6c4cb2cc71d0635e857, type: 3}
-        line: (Completion)
+        sourceClip: {fileID: 8300000, guid: 98a17de65a472304ba86e6304dec7975, type: 3}
+        line: NEGATIVE!
+        index: 0
+    - initalLine:
+        sourceClip: {fileID: 0}
+        line: Sure
+        index: 0
+      reactionLine:
+        sourceClip: {fileID: 8300000, guid: 8f895f95c7d0db74aa449bf3d01b17cb, type: 3}
+        line: Uh-oh..
         index: 0
 --- !u!82 &880101980
 AudioSource:
@@ -1122,7 +1131,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1430850596}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.65, z: 0}
+  m_LocalPosition: {x: 0, y: 3.14, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 880101981}
@@ -1209,8 +1218,8 @@ RectTransform:
   m_Father: {fileID: 42626822}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.11}
+  m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1226,7 +1235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.167}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.104}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

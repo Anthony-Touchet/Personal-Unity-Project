@@ -12,19 +12,20 @@ public class Line
 }
 
 [Serializable]
+public class Reaction
+{
+    public Line initalLine;
+    public Line reactionLine;
+}
+
+[Serializable]
 public class BranchingLine : Line
 {
-    [Serializable]
-    public class Reaction
-    {
-        public Line initalLine;
-        public Line reactionLine;
-    }
-
     public List<Reaction> reactions = new List<Reaction>();
+}
 
-    public void PlayChoice(int choice, string text)
-    {
-        
-    }
+[Serializable]
+public class HubLine : Line
+{
+    public List<Reaction> choicesList = new List<Reaction>();
 }

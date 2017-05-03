@@ -19,14 +19,14 @@ public class Conversation : MonoBehaviour
     private IEnumerator corutineEnumerator;
 
     public float lineChoiceSpacing;
-    [Range(0, 1)]
-    public float lineChoiceSize;
+    [Range(0, 1)] public float lineChoiceSize;
     public float waitAfterLine;
     public Text lineText;
 
     [Space]
     public List<Line> conversationLines;
     public List<BranchingLine> brancingLine;
+    public List<HubLine> hubLines;
 
     private void Awake()
     {
@@ -34,6 +34,10 @@ public class Conversation : MonoBehaviour
         foreach (var bl in brancingLine)
         {
             m_AllLines.Add(bl);
+        }
+        foreach (var hl in hubLines)
+        {
+            m_AllLines.Add(hl);
         }
 
         m_AllLines = m_AllLines.OrderBy(l => l.index).ToList();
@@ -51,11 +55,10 @@ public class Conversation : MonoBehaviour
         PlayLine(m_CurrentLine);
         corutineEnumerator = DialogueCoRutine();
     }
-	
-	private void Update()
-	{
 
-	    if(corutineEnumerator != null && !m_ChoiceWaiting)
+    private void Update()
+    {
+        if (corutineEnumerator != null && !m_ChoiceWaiting)
             corutineEnumerator.MoveNext();
     }
 
@@ -64,7 +67,7 @@ public class Conversation : MonoBehaviour
         while (!m_Done)
         {
             //If the Audio is playing, Don't worry
-            while(m_AudioSource.isPlaying)
+            while (m_AudioSource.isPlaying)
                 yield return null;
 
             // If it is not playing, count down
@@ -106,6 +109,13 @@ public class Conversation : MonoBehaviour
             {
                 PlayLine(m_CurrentLine);
                 PopulateButtons((BranchingLine)m_CurrentLine);
+                m_ChoiceWaiting = true;
+            }
+
+            else if (m_CurrentLine.GetType() == typeof(HubLine))
+            {
+                PlayLine(m_CurrentLine);
+                PopulateButtons((HubLine)m_CurrentLine);
                 m_ChoiceWaiting = true;
             }
         }
@@ -170,11 +180,67 @@ public class Conversation : MonoBehaviour
                         buttonComponet.interactable = false;
 
                         buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, 0.5f +
+                            lineChoiceSize/2);
+                        buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, 0.5f -
+                            lineChoiceSize/2);
+                    }
+                }
+            });
+        }
+    }
+
+    private void PopulateButtons(HubLine pLine)
+    {
+        m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
+
+        foreach (Transform go in m_DialogueScreen.transform)
+        {
+            Destroy(go.gameObject);
+        }
+
+        var textPlacement = 1f;
+        foreach (var reaction in pLine.choicesList)
+        {
+            var buttonGameObject = Instantiate(Resources.Load("LineButton")) as GameObject;
+            var buttonTransform = buttonGameObject.GetComponent<RectTransform>();
+            buttonGameObject.transform.SetParent(m_DialogueScreen.transform);
+
+            textPlacement -= lineChoiceSpacing;
+            buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, textPlacement);
+            textPlacement -= lineChoiceSize;
+            buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, textPlacement);
+
+            buttonTransform.offsetMax = Vector2.zero;
+            buttonTransform.offsetMin = Vector2.zero;
+
+            buttonTransform.GetComponentInChildren<Text>().text = reaction.initalLine.line;
+
+            var buttonComponet = buttonGameObject.GetComponent<Button>();
+            buttonComponet.onClick.AddListener(() =>
+            {
+                PlayLine(reaction.reactionLine);
+                if (pLine.choicesList.IndexOf(reaction) == 0)
+                {
+                    m_ChoiceWaiting = false;
+                }
+                foreach (Transform go in m_DialogueScreen.transform)
+                {
+                    if (go != buttonTransform)
+                        Destroy(go.gameObject);
+                    else
+                    {
+                        buttonComponet.onClick.RemoveAllListeners();
+                        buttonComponet.interactable = false;
+
+                        buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, 0.5f +
                             lineChoiceSize / 2);
-                        buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, 0.5f - 
+                        buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, 0.5f -
                             lineChoiceSize / 2);
                     }
                 }
+                //TODO: Repeat
+
+
             });
         }
     }

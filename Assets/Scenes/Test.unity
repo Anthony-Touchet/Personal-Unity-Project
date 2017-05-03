@@ -740,7 +740,7 @@ MonoBehaviour:
   brancingLine:
   - sourceClip: {fileID: 8300000, guid: 752df164f3c781c4eadaabdf854c5d94, type: 3}
     line: (Machine noises)
-    index: 2
+    index: 5
     reactions:
     - initalLine:
         sourceClip: {fileID: 0}
@@ -761,7 +761,7 @@ MonoBehaviour:
   hubLines:
   - sourceClip: {fileID: 8300000, guid: ae0c598be101fdf488419b52979e1125, type: 3}
     line: Help us human...
-    index: 5
+    index: 2
     choicesList:
     - initalLine:
         sourceClip: {fileID: 0}
@@ -1218,8 +1218,8 @@ RectTransform:
   m_Father: {fileID: 42626822}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.11}
-  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchorMin: {x: 0.57900006, y: 0.11}
+  m_AnchorMax: {x: 1, y: 0.34739244}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

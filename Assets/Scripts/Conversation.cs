@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -219,10 +218,7 @@ public class Conversation : MonoBehaviour
             buttonComponet.onClick.AddListener(() =>
             {
                 PlayLine(reaction.reactionLine);
-                if (pLine.choicesList.IndexOf(reaction) == 0)
-                {
-                    m_ChoiceWaiting = false;
-                }
+                
                 foreach (Transform go in m_DialogueScreen.transform)
                 {
                     if (go != buttonTransform)
@@ -238,9 +234,13 @@ public class Conversation : MonoBehaviour
                             lineChoiceSize / 2);
                     }
                 }
-                //TODO: Repeat
+                
+                if (pLine.choicesList.IndexOf(reaction) == 0)
+                {
+                    m_ChoiceWaiting = false;
+                }
 
-
+                //TODO: Repeat inital line.
             });
         }
     }

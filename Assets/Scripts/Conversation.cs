@@ -10,12 +10,16 @@ public class Conversation : MonoBehaviour
     private AudioSource m_AudioSource;
     private Line m_CurrentLine;
     private float m_Timer;
+
     private bool m_Done;
     private bool m_ChoiceWaiting;
+    private bool m_Repeat;
+
     private GameObject m_DialogueScreen;
     private List<Line> m_AllLines = new List<Line>();
 
     private IEnumerator corutineEnumerator;
+    private Image m_FaceExpression;
 
     public float lineChoiceSpacing;
     [Range(0, 1)] public float lineChoiceSize;
@@ -29,6 +33,8 @@ public class Conversation : MonoBehaviour
 
     private void Awake()
     {
+        m_FaceExpression = gameObject.GetComponentInChildren<Image>();
+
         m_AllLines.AddRange(conversationLines);
         foreach (var bl in brancingLine)
         {
@@ -78,6 +84,16 @@ public class Conversation : MonoBehaviour
 
             // After countdown, reset timer
             m_Timer = waitAfterLine;
+            
+            // If we repeat and are a hub line, repeat
+            if (m_Repeat)
+            {
+                PlayLine(m_CurrentLine);
+                PopulateButtons((HubLine)m_CurrentLine);
+                m_ChoiceWaiting = true;
+                m_Repeat = true;
+                continue;
+            }
 
             for (var i = 0; i < m_AllLines.Count; i++)
             {
@@ -92,6 +108,7 @@ public class Conversation : MonoBehaviour
                 m_CurrentLine = null;
                 m_AudioSource.clip = null;
                 m_Done = true;
+                lineText.text = "";
                 break;
             }
 
@@ -116,6 +133,7 @@ public class Conversation : MonoBehaviour
                 PlayLine(m_CurrentLine);
                 PopulateButtons((HubLine)m_CurrentLine);
                 m_ChoiceWaiting = true;
+                m_Repeat = true;
             }
         }
         yield return null;
@@ -135,6 +153,7 @@ public class Conversation : MonoBehaviour
         lineText.text = line.line;
         m_AudioSource.clip = line.sourceClip;
         m_AudioSource.Play();
+        m_FaceExpression.sprite = line.expression;
     }
 
     [ContextMenu("Spawn Button")]
@@ -218,6 +237,7 @@ public class Conversation : MonoBehaviour
             buttonComponet.onClick.AddListener(() =>
             {
                 PlayLine(reaction.reactionLine);
+                m_ChoiceWaiting = false;
                 
                 foreach (Transform go in m_DialogueScreen.transform)
                 {
@@ -234,13 +254,11 @@ public class Conversation : MonoBehaviour
                             lineChoiceSize / 2);
                     }
                 }
-                
+
                 if (pLine.choicesList.IndexOf(reaction) == 0)
                 {
-                    m_ChoiceWaiting = false;
+                    m_Repeat = false;
                 }
-
-                //TODO: Repeat inital line.
             });
         }
     }

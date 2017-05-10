@@ -21,6 +21,9 @@ public class Conversation : MonoBehaviour
     private IEnumerator corutineEnumerator;
     private Image m_FaceExpression;
 
+    private Transform playerTransform;
+
+    public float range;
     public float lineChoiceSpacing;
     [Range(0, 1)] public float lineChoiceSize;
     public float waitAfterLine;
@@ -33,6 +36,8 @@ public class Conversation : MonoBehaviour
 
     private void Awake()
     {
+        playerTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+
         m_FaceExpression = gameObject.GetComponentInChildren<Image>();
 
         m_AllLines.AddRange(conversationLines);
@@ -63,6 +68,19 @@ public class Conversation : MonoBehaviour
 
     private void Update()
     {
+        if ((playerTransform.position - transform.position).magnitude > range && corutineEnumerator != null)
+        {
+            corutineEnumerator = null;
+            EndDialogue();
+        }
+            
+        else if ((playerTransform.position - transform.position).magnitude <= range &&
+                 corutineEnumerator == null)
+        {
+            RestartDialogue();
+            corutineEnumerator = DialogueCoRutine();
+        }
+
         if (corutineEnumerator != null && !m_ChoiceWaiting)
             corutineEnumerator.MoveNext();
     }
@@ -105,10 +123,7 @@ public class Conversation : MonoBehaviour
 
                 if (i + 1 < m_AllLines.Count) continue;
 
-                m_CurrentLine = null;
-                m_AudioSource.clip = null;
-                m_Done = true;
-                lineText.text = "";
+                EndDialogue();
                 break;
             }
 
@@ -141,11 +156,26 @@ public class Conversation : MonoBehaviour
 
     // Dialogue can now be restarted.
     [ContextMenu("Restart")]
-    public void RestartDialogue()
+    private void RestartDialogue()
     {
         m_CurrentLine = m_AllLines[0];
         m_Done = false;
         PlayLine(m_CurrentLine);
+    }
+
+    private void EndDialogue()
+    {
+        m_CurrentLine = null;
+        m_AudioSource.clip = null;
+        m_Done = true;
+        lineText.text = "";
+
+        if(m_AudioSource.isPlaying)
+            m_AudioSource.Stop();
+
+        if (m_DialogueScreen.transform.childCount <= 0) return;
+
+        ClearChoices();
     }
 
     private void PlayLine(Line line)
@@ -161,10 +191,7 @@ public class Conversation : MonoBehaviour
     {
         m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
 
-        foreach (Transform go in m_DialogueScreen.transform)
-        {
-            Destroy(go.gameObject);
-        }
+        ClearChoices();
 
         var textPlacement = 1f;
         foreach (var reaction in pLine.reactions)
@@ -211,10 +238,7 @@ public class Conversation : MonoBehaviour
     {
         m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
 
-        foreach (Transform go in m_DialogueScreen.transform)
-        {
-            Destroy(go.gameObject);
-        }
+        ClearChoices();
 
         var textPlacement = 1f;
         foreach (var reaction in pLine.choicesList)
@@ -260,6 +284,14 @@ public class Conversation : MonoBehaviour
                     m_Repeat = false;
                 }
             });
+        }
+    }
+
+    private void ClearChoices()
+    {
+        foreach (Transform t in m_DialogueScreen.transform)
+        {
+            Destroy(t.gameObject);
         }
     }
 }

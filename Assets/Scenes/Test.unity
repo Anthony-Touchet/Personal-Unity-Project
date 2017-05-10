@@ -913,7 +913,7 @@ MonoBehaviour:
   lineChoiceSize: 0.3
   waitAfterLine: 0.25
   lineText: {fileID: 1264098639}
-  m_FaceExpression: {fileID: 493149860}
+  faceExpression: {fileID: 493149860}
   conversationLines:
   - {fileID: 11400000, guid: b2b3dda6850178a41a0ec8ad8320ff2e, type: 2}
   - {fileID: 11400000, guid: 3d7c3b355e5497940b024850f6ac6107, type: 2}

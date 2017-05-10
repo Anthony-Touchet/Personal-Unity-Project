@@ -18,9 +18,9 @@ public class Conversation : MonoBehaviour
     private GameObject m_DialogueScreen;
     private List<Line> m_AllLines = new List<Line>();
 
-    private IEnumerator corutineEnumerator;
+    private IEnumerator m_CorutineEnumerator;
     
-    private Transform playerTransform;
+    private Transform m_PlayerTransform;
 
     private List<Line> m_ConversationLines = new List<Line>();
     private List<BranchingLine> m_BrancingLine = new List<BranchingLine>();
@@ -33,7 +33,7 @@ public class Conversation : MonoBehaviour
     [Range(0, 1)] public float lineChoiceSize;
     public float waitAfterLine;
     public Text lineText;
-    public Image m_FaceExpression;
+    public Image faceExpression;
 
     [Space]
     public List<Line> conversationLines;
@@ -78,36 +78,36 @@ public class Conversation : MonoBehaviour
             return;
         }
 
-        playerTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        m_PlayerTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
         m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
         m_Timer = waitAfterLine;
         m_AudioSource = GetComponent<AudioSource>();
 
         if (is3D) return;
         RestartDialogue();
-        corutineEnumerator = DialogueCoRutine();
+        m_CorutineEnumerator = DialogueCoRutine();
     }
 
     private void Update()
     {
         if (is3D)
         {
-            if ((playerTransform.position - transform.position).magnitude > range && corutineEnumerator != null)
+            if ((m_PlayerTransform.position - transform.position).magnitude > range && m_CorutineEnumerator != null)
             {
-                corutineEnumerator = null;
+                m_CorutineEnumerator = null;
                 EndDialogue();
             }
 
-            else if ((playerTransform.position - transform.position).magnitude <= range &&
-                     corutineEnumerator == null)
+            else if ((m_PlayerTransform.position - transform.position).magnitude <= range &&
+                     m_CorutineEnumerator == null)
             {
                 RestartDialogue();
-                corutineEnumerator = DialogueCoRutine();
+                m_CorutineEnumerator = DialogueCoRutine();
             }
         }
 
-        if (corutineEnumerator != null && !m_ChoiceWaiting)
-            corutineEnumerator.MoveNext();
+        if (m_CorutineEnumerator != null && !m_ChoiceWaiting)
+            m_CorutineEnumerator.MoveNext();
     }
 
     private IEnumerator DialogueCoRutine()
@@ -185,9 +185,11 @@ public class Conversation : MonoBehaviour
     {
         EndDialogue();
 
+        m_CorutineEnumerator = null;
         m_CurrentLine = m_AllLines[0];
         m_Done = false;
         PlayLine(m_CurrentLine);
+        m_CorutineEnumerator = DialogueCoRutine();
     }
 
     private void EndDialogue()
@@ -210,7 +212,7 @@ public class Conversation : MonoBehaviour
         lineText.text = line.line;
         m_AudioSource.clip = line.sourceClip;
         m_AudioSource.Play();
-        m_FaceExpression.sprite = line.expression;
+        faceExpression.sprite = line.expression;
     }
 
     [ContextMenu("Spawn Button")]

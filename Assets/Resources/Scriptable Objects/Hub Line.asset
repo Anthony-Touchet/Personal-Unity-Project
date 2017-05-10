@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Hub Line
+  m_EditorClassIdentifier: Assembly-CSharp::HubLine
+  sourceClip: {fileID: 8300000, guid: ae0c598be101fdf488419b52979e1125, type: 3}
+  line: Help Us Human...
+  index: 2
+  expression: {fileID: 21300004, guid: 61098c502ac09404698168321497d250, type: 3}
+  choicesList:
+  - playerLine: {fileID: 11400000, guid: 15924537982fef544ada12d18e6790a2, type: 2}
+    reactionLine: {fileID: 11400000, guid: 8b299522ffdbc89419e0ad57ed50d392, type: 2}
+  - playerLine: {fileID: 11400000, guid: 547842f7861d0cf4483b167f30e866af, type: 2}
+    reactionLine: {fileID: 11400000, guid: 5323f3f936576354796482a0be4666ab, type: 2}
+  - playerLine: {fileID: 11400000, guid: 3e92318f15e579943a69695fd8f8d6cd, type: 2}
+    reactionLine: {fileID: 11400000, guid: 23484a0f6cf1a944e9c694386e65ab83, type: 2}

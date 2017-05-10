@@ -42,21 +42,23 @@ public class Conversation : MonoBehaviour
 
     private void Awake()
     {
-        //foreach (var bl in brancingLine)
-        //{
-        //    m_BrancingLine.Add(Instantiate(bl));
-        //}
+        // Get info
+        foreach (var bl in brancingLine)
+        {
+            m_BrancingLine.Add(Instantiate(bl));
+        }
 
-        //foreach (var cl in conversationLines)
-        //{
-        //    m_ConversationLines.Add(Instantiate(cl));
-        //}
+        foreach (var cl in conversationLines)
+        {
+            m_ConversationLines.Add(Instantiate(cl));
+        }
 
-        //foreach (var hl in hubLines)
-        //{
-        //    m_HubLines.Add(Instantiate(hl));
-        //}
+        foreach (var hl in hubLines)
+        {
+            m_HubLines.Add(Instantiate(hl));
+        }
 
+        // Put all the info together
         m_AllLines.AddRange(m_ConversationLines);
         foreach (var bl in m_BrancingLine)
         {
@@ -67,6 +69,7 @@ public class Conversation : MonoBehaviour
             m_AllLines.Add(hl);
         }
 
+        // Sort the Info based on it's position within the the conversation(ie: the index)
         m_AllLines = m_AllLines.OrderBy(l => l.index).ToList();
 
         if (m_AllLines.Count == 0)
@@ -80,10 +83,9 @@ public class Conversation : MonoBehaviour
         m_Timer = waitAfterLine;
         m_AudioSource = GetComponent<AudioSource>();
 
-        if (!is3D)
-        {
-            RestartDialogue();
-        }
+        if (is3D) return;
+        RestartDialogue();
+        corutineEnumerator = DialogueCoRutine();
     }
 
     private void Update()
@@ -179,8 +181,10 @@ public class Conversation : MonoBehaviour
 
     // Dialogue can now be restarted.
     [ContextMenu("Restart")]
-    private void RestartDialogue()
+    public void RestartDialogue()
     {
+        EndDialogue();
+
         m_CurrentLine = m_AllLines[0];
         m_Done = false;
         PlayLine(m_CurrentLine);

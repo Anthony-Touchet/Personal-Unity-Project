@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Branching Line
+  m_EditorClassIdentifier: Assembly-CSharp::BranchingLine
+  sourceClip: {fileID: 8300000, guid: fedb2da30aed3e240847db0014134ee7, type: 3}
+  line: (Beeps and Screeches)
+  index: 4
+  expression: {fileID: 21300014, guid: 61098c502ac09404698168321497d250, type: 3}
+  reactions:
+  - playerLine: {fileID: 11400000, guid: 71ee0035c4fc24e42b089c936a705b26, type: 2}
+    reactionLine: {fileID: 11400000, guid: 30f0f61229caab04892ed8917f88686b, type: 2}
+  - playerLine: {fileID: 11400000, guid: 56b46209fc245cc4fb9da9620e50a0c3, type: 2}
+    reactionLine: {fileID: 11400000, guid: 7be20281ac6c96e42b0cc2451a6a2a0f, type: 2}

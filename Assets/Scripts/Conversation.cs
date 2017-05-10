@@ -19,15 +19,21 @@ public class Conversation : MonoBehaviour
     private List<Line> m_AllLines = new List<Line>();
 
     private IEnumerator corutineEnumerator;
-    private Image m_FaceExpression;
-
+    
     private Transform playerTransform;
+
+    private List<Line> m_ConversationLines = new List<Line>();
+    private List<BranchingLine> m_BrancingLine = new List<BranchingLine>();
+    private List<HubLine> m_HubLines = new List<HubLine>();
+
+    public bool is3D;
 
     public float range;
     public float lineChoiceSpacing;
     [Range(0, 1)] public float lineChoiceSize;
     public float waitAfterLine;
     public Text lineText;
+    public Image m_FaceExpression;
 
     [Space]
     public List<Line> conversationLines;
@@ -36,49 +42,66 @@ public class Conversation : MonoBehaviour
 
     private void Awake()
     {
-        playerTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        //foreach (var bl in brancingLine)
+        //{
+        //    m_BrancingLine.Add(Instantiate(bl));
+        //}
 
-        m_FaceExpression = gameObject.GetComponentInChildren<Image>();
+        //foreach (var cl in conversationLines)
+        //{
+        //    m_ConversationLines.Add(Instantiate(cl));
+        //}
 
-        m_AllLines.AddRange(conversationLines);
-        foreach (var bl in brancingLine)
+        //foreach (var hl in hubLines)
+        //{
+        //    m_HubLines.Add(Instantiate(hl));
+        //}
+
+        m_AllLines.AddRange(m_ConversationLines);
+        foreach (var bl in m_BrancingLine)
         {
             m_AllLines.Add(bl);
         }
-        foreach (var hl in hubLines)
+        foreach (var hl in m_HubLines)
         {
             m_AllLines.Add(hl);
         }
 
         m_AllLines = m_AllLines.OrderBy(l => l.index).ToList();
 
-        m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
-        m_Timer = waitAfterLine;
-        m_AudioSource = GetComponent<AudioSource>();
         if (m_AllLines.Count == 0)
         {
-            Destroy(gameObject);
+            Destroy(this);
             return;
         }
 
-        m_CurrentLine = m_AllLines[0];
-        PlayLine(m_CurrentLine);
-        corutineEnumerator = DialogueCoRutine();
+        playerTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
+        m_Timer = waitAfterLine;
+        m_AudioSource = GetComponent<AudioSource>();
+
+        if (!is3D)
+        {
+            RestartDialogue();
+        }
     }
 
     private void Update()
     {
-        if ((playerTransform.position - transform.position).magnitude > range && corutineEnumerator != null)
+        if (is3D)
         {
-            corutineEnumerator = null;
-            EndDialogue();
-        }
-            
-        else if ((playerTransform.position - transform.position).magnitude <= range &&
-                 corutineEnumerator == null)
-        {
-            RestartDialogue();
-            corutineEnumerator = DialogueCoRutine();
+            if ((playerTransform.position - transform.position).magnitude > range && corutineEnumerator != null)
+            {
+                corutineEnumerator = null;
+                EndDialogue();
+            }
+
+            else if ((playerTransform.position - transform.position).magnitude <= range &&
+                     corutineEnumerator == null)
+            {
+                RestartDialogue();
+                corutineEnumerator = DialogueCoRutine();
+            }
         }
 
         if (corutineEnumerator != null && !m_ChoiceWaiting)
@@ -197,6 +220,7 @@ public class Conversation : MonoBehaviour
         foreach (var reaction in pLine.reactions)
         {
             var buttonGameObject = Instantiate(Resources.Load("LineButton")) as GameObject;
+            if (buttonGameObject == null) continue;
             var buttonTransform = buttonGameObject.GetComponent<RectTransform>();
             buttonGameObject.transform.SetParent(m_DialogueScreen.transform);
 
@@ -208,7 +232,7 @@ public class Conversation : MonoBehaviour
             buttonTransform.offsetMax = Vector2.zero;
             buttonTransform.offsetMin = Vector2.zero;
 
-            buttonTransform.GetComponentInChildren<Text>().text = reaction.initalLine.line;
+            buttonTransform.GetComponentInChildren<Text>().text = reaction.playerLine.line;
             var reaction1 = reaction;
             var buttonComponet = buttonGameObject.GetComponent<Button>();
             buttonComponet.onClick.AddListener(() =>
@@ -244,6 +268,7 @@ public class Conversation : MonoBehaviour
         foreach (var reaction in pLine.choicesList)
         {
             var buttonGameObject = Instantiate(Resources.Load("LineButton")) as GameObject;
+            if (buttonGameObject == null) continue;
             var buttonTransform = buttonGameObject.GetComponent<RectTransform>();
             buttonGameObject.transform.SetParent(m_DialogueScreen.transform);
 
@@ -255,12 +280,13 @@ public class Conversation : MonoBehaviour
             buttonTransform.offsetMax = Vector2.zero;
             buttonTransform.offsetMin = Vector2.zero;
 
-            buttonTransform.GetComponentInChildren<Text>().text = reaction.initalLine.line;
+            buttonTransform.GetComponentInChildren<Text>().text = reaction.playerLine.line;
 
             var buttonComponet = buttonGameObject.GetComponent<Button>();
+            var reaction1 = reaction;
             buttonComponet.onClick.AddListener(() =>
             {
-                PlayLine(reaction.reactionLine);
+                PlayLine(reaction1.reactionLine);
                 m_ChoiceWaiting = false;
                 
                 foreach (Transform go in m_DialogueScreen.transform)
@@ -279,7 +305,7 @@ public class Conversation : MonoBehaviour
                     }
                 }
 
-                if (pLine.choicesList.IndexOf(reaction) == 0)
+                if (pLine.choicesList.IndexOf(reaction1) == 0)
                 {
                     m_Repeat = false;
                 }

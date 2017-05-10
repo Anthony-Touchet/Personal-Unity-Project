@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: Reaction Line 4
   m_EditorClassIdentifier: Assembly-CSharp::Line
-  sourceClip: {fileID: 8300000, guid: cf917a02283ad874884399eeceac4cd3, type: 3}
-  line: Yaaaaay!
+  sourceClip: {fileID: 0}
+  line: 
   index: 0
-  expression: {fileID: 21300002, guid: 61098c502ac09404698168321497d250, type: 3}
+  expression: {fileID: 0}

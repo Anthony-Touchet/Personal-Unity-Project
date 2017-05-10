@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Name: Reaction Line
   m_EditorClassIdentifier: Assembly-CSharp::Line
   sourceClip: {fileID: 8300000, guid: c733fbb1ee6f3294bb91640ac75557ef, type: 3}
-  line: (The computer Growls at you)
+  line: (The computer growls at you)
   index: 0
   expression: {fileID: 21300008, guid: 61098c502ac09404698168321497d250, type: 3}

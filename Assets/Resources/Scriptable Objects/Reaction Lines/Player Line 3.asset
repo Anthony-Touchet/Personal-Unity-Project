@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Name: Player Line 3
   m_EditorClassIdentifier: Assembly-CSharp::Line
   sourceClip: {fileID: 0}
-  line: The hell!!
+  line: The Hell?!?!?
   index: 0
   expression: {fileID: 0}

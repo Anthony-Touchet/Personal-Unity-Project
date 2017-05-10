@@ -16,7 +16,7 @@ MonoBehaviour:
   index: 4
   expression: {fileID: 21300014, guid: 61098c502ac09404698168321497d250, type: 3}
   reactions:
-  - playerLine: {fileID: 11400000, guid: 71ee0035c4fc24e42b089c936a705b26, type: 2}
-    reactionLine: {fileID: 11400000, guid: 30f0f61229caab04892ed8917f88686b, type: 2}
-  - playerLine: {fileID: 11400000, guid: 56b46209fc245cc4fb9da9620e50a0c3, type: 2}
-    reactionLine: {fileID: 11400000, guid: 7be20281ac6c96e42b0cc2451a6a2a0f, type: 2}
+  - playerLine: {fileID: 11400000, guid: 3a0299d7948130c48bcf2d1e96ce8f4a, type: 2}
+    reactionLine: {fileID: 11400000, guid: 8af5e30cf0aa3f740983d24fb2d250b9, type: 2}
+  - playerLine: {fileID: 11400000, guid: 4b7abe1bc8b30cd4087345c7bf453dce, type: 2}
+    reactionLine: {fileID: 11400000, guid: bdaab560f3f5b4a40983a7a2c1e20e58, type: 2}

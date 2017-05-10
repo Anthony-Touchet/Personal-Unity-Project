@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Name: Reaction Line 1
   m_EditorClassIdentifier: Assembly-CSharp::Line
   sourceClip: {fileID: 8300000, guid: 98a17de65a472304ba86e6304dec7975, type: 3}
-  line: NEGATIVE!!
+  line: Negative!!
   index: 0
   expression: {fileID: 21300008, guid: 61098c502ac09404698168321497d250, type: 3}

@@ -16,9 +16,9 @@ MonoBehaviour:
   index: 2
   expression: {fileID: 21300004, guid: 61098c502ac09404698168321497d250, type: 3}
   choicesList:
-  - playerLine: {fileID: 11400000, guid: 15924537982fef544ada12d18e6790a2, type: 2}
-    reactionLine: {fileID: 11400000, guid: 8b299522ffdbc89419e0ad57ed50d392, type: 2}
-  - playerLine: {fileID: 11400000, guid: 547842f7861d0cf4483b167f30e866af, type: 2}
-    reactionLine: {fileID: 11400000, guid: 5323f3f936576354796482a0be4666ab, type: 2}
-  - playerLine: {fileID: 11400000, guid: 3e92318f15e579943a69695fd8f8d6cd, type: 2}
-    reactionLine: {fileID: 11400000, guid: 23484a0f6cf1a944e9c694386e65ab83, type: 2}
+  - playerLine: {fileID: 11400000, guid: 0a0143547ba15754ebfe848d54c44da3, type: 2}
+    reactionLine: {fileID: 11400000, guid: 5360c10cdbfe39446b67ccad47931e72, type: 2}
+  - playerLine: {fileID: 11400000, guid: 6503046450986ec4b9f2e34b1da721dc, type: 2}
+    reactionLine: {fileID: 11400000, guid: 778887e7f74842346bfa7c85a9702629, type: 2}
+  - playerLine: {fileID: 11400000, guid: 7a14d4a56b6454f4faca5c55476d3d54, type: 2}
+    reactionLine: {fileID: 11400000, guid: cdd95fd0b9deb5949b7bea53271bdfeb, type: 2}

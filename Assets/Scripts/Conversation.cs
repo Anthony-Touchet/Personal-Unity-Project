@@ -27,11 +27,12 @@ public class Conversation : MonoBehaviour
     private List<HubLine> m_HubLines = new List<HubLine>();
 
     public bool is3D;
-
     public float range;
+    [Space]
     public float lineChoiceSpacing;
     [Range(0, 1)] public float lineChoiceSize;
     public float waitAfterLine;
+    [Space]
     public Text lineText;
     public Image faceExpression;
 
@@ -188,8 +189,9 @@ public class Conversation : MonoBehaviour
         m_CorutineEnumerator = null;
         m_CurrentLine = m_AllLines[0];
         m_Done = false;
-        PlayLine(m_CurrentLine);
+        
         m_CorutineEnumerator = DialogueCoRutine();
+        PlayLine(m_CurrentLine);
     }
 
     private void EndDialogue()

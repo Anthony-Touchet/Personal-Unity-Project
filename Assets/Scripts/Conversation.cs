@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(AudioSource))]
@@ -14,6 +15,7 @@ public class Conversation : MonoBehaviour
     private bool m_Done;
     private bool m_ChoiceWaiting;
     private bool m_Repeat;
+    private bool m_ButtonClicked;
 
     private GameObject m_DialogueScreen;
     private List<Line> m_AllLines = new List<Line>();
@@ -91,22 +93,39 @@ public class Conversation : MonoBehaviour
 
     private void Update()
     {
+        // 3D Dialogue
         if (is3D)
         {
-            if ((m_PlayerTransform.position - transform.position).magnitude > range && m_CorutineEnumerator != null)
+            // End conversation if out of range
+            if ((m_PlayerTransform.position - transform.position).magnitude > range && 
+                m_CorutineEnumerator != null)
             {
                 m_CorutineEnumerator = null;
                 EndDialogue();
             }
 
+            // Resart conversation if in range
             else if ((m_PlayerTransform.position - transform.position).magnitude <= range &&
-                     m_CorutineEnumerator == null)
+                m_CorutineEnumerator == null)
             {
                 RestartDialogue();
                 m_CorutineEnumerator = DialogueCoRutine();
             }
         }
 
+        // If the player wants to skip the dialogue, Click right mouse button.
+        if (Input.GetKeyUp(KeyCode.Mouse0) && !m_ButtonClicked)
+        {
+            m_Timer = 0;
+            m_AudioSource.Stop();
+        }
+        // If a button was just pressed, ignore above and reset
+        else if (m_ButtonClicked)
+        {
+            m_ButtonClicked = false;
+        }
+
+        // Continue Iteration if we are not waiting to choose a choice
         if (m_CorutineEnumerator != null && !m_ChoiceWaiting)
             m_CorutineEnumerator.MoveNext();
     }
@@ -118,6 +137,7 @@ public class Conversation : MonoBehaviour
             //If the Audio is playing, Don't worry
             while (m_AudioSource.isPlaying)
                 yield return null;
+
 
             // If it is not playing, count down
             while (m_Timer > 0)
@@ -139,6 +159,7 @@ public class Conversation : MonoBehaviour
                 continue;
             }
 
+            // Try to get the next line
             for (var i = 0; i < m_AllLines.Count; i++)
             {
                 if (m_AllLines[i] == m_CurrentLine && i + 1 != m_AllLines.Count)
@@ -189,9 +210,13 @@ public class Conversation : MonoBehaviour
         m_CorutineEnumerator = null;
         m_CurrentLine = m_AllLines[0];
         m_Done = false;
-        
+        m_ChoiceWaiting = false;
+        m_Repeat = false;
+
         m_CorutineEnumerator = DialogueCoRutine();
         PlayLine(m_CurrentLine);
+
+        m_ButtonClicked = true;
     }
 
     private void EndDialogue()
@@ -247,6 +272,8 @@ public class Conversation : MonoBehaviour
             {
                 PlayLine(reaction1.reactionLine);
                 m_ChoiceWaiting = false;
+                m_ButtonClicked = true;
+
                 foreach (Transform go in m_DialogueScreen.transform)
                 {
                     if (go != buttonTransform)
@@ -296,7 +323,8 @@ public class Conversation : MonoBehaviour
             {
                 PlayLine(reaction1.reactionLine);
                 m_ChoiceWaiting = false;
-                
+                m_ButtonClicked = true;
+
                 foreach (Transform go in m_DialogueScreen.transform)
                 {
                     if (go != buttonTransform)

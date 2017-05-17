@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0b9e1f20616abc41b1dc53fb9e082ba, type: 3}
+  m_Name: Noise(Branching)
+  m_EditorClassIdentifier: 
+  sourceClip: {fileID: 8300000, guid: 752df164f3c781c4eadaabdf854c5d94, type: 3}
+  line: (Ear shattering Noise)
+  index: 4
+  expression: {fileID: 21300014, guid: 61098c502ac09404698168321497d250, type: 3}
+  reactions:
+  - playerLine: {fileID: 11400000, guid: 6ecb01eed2d5513419ba1da040fc63ba, type: 2}
+    reactionLine: {fileID: 11400000, guid: 40bb0e91d6be0254b8a4465aabb9a600, type: 2}
+  - playerLine: {fileID: 11400000, guid: feef85bca8fc1534e918ed2cd09caed8, type: 2}
+    reactionLine: {fileID: 11400000, guid: 9be385ea9f404f844870a5fbfb65ec8a, type: 2}

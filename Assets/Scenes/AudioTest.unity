@@ -381,7 +381,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 389672563}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -115.1}
+  m_LocalPosition: {x: 0, y: 0, z: -115.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -692,8 +692,8 @@ RectTransform:
   m_Father: {fileID: 42626822}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.2, y: 0}
-  m_AnchorMax: {x: 0.8, y: 0.1}
+  m_AnchorMin: {x: 0.1, y: 0}
+  m_AnchorMax: {x: 0.9, y: 0.13835703}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -718,12 +718,12 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 25
+    m_FontSize: 23
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
     m_MaxSize: 40
-    m_Alignment: 1
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -915,14 +915,14 @@ MonoBehaviour:
   lineText: {fileID: 1264098639}
   faceExpression: {fileID: 493149860}
   conversationLines:
-  - {fileID: 11400000, guid: b2b3dda6850178a41a0ec8ad8320ff2e, type: 2}
-  - {fileID: 11400000, guid: 3d7c3b355e5497940b024850f6ac6107, type: 2}
-  - {fileID: 11400000, guid: b1f93de00872a8645889c5c74898ee28, type: 2}
-  - {fileID: 11400000, guid: 374f687edcd7b16449798804305822f4, type: 2}
+  - {fileID: 11400000, guid: fa0fa265cad54b94ebe76d24b116896e, type: 2}
+  - {fileID: 11400000, guid: d5b02f0256b41b64ca63af927e64d0cc, type: 2}
+  - {fileID: 11400000, guid: 3bdee4ec804590245b727bbd5392b894, type: 2}
+  - {fileID: 11400000, guid: 0e50af8ba184e4043bc86aa586bd803a, type: 2}
   brancingLine:
-  - {fileID: 11400000, guid: c6aa762c25cb335488d3db7aebdb63fa, type: 2}
+  - {fileID: 11400000, guid: 970b759acf91c274a924d14aebe7db26, type: 2}
   hubLines:
-  - {fileID: 11400000, guid: 4fb1af5f10ec9ac49998db7b353b1180, type: 2}
+  - {fileID: 11400000, guid: 0ed44ccf7c41bd7419e66c55b87b7639, type: 2}
 --- !u!82 &1545600887
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1033,8 +1033,8 @@ RectTransform:
   m_Father: {fileID: 42626822}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.57900006, y: 0.11}
-  m_AnchorMax: {x: 1, y: 0.34739244}
+  m_AnchorMin: {x: 0.58, y: 0.21}
+  m_AnchorMax: {x: 1, y: 0.44}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

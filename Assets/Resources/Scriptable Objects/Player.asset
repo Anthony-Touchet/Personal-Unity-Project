@@ -9,6 +9,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 867e50d98f961f44493e80f618a6a015, type: 3}
-  m_Name: New Unit
+  m_Name: Player
   m_EditorClassIdentifier: 
-  proficentcySkills: 
+  attributes:
+  - m_Magnitude: 20
+    m_AttributeType: 0
+  - m_Magnitude: 20
+    m_AttributeType: 1
+  - m_Magnitude: 20
+    m_AttributeType: 2
+  - m_Magnitude: 20
+    m_AttributeType: 3
+  - m_Magnitude: 20
+    m_AttributeType: 4
+  - m_Magnitude: 20
+    m_AttributeType: 5
+  proficentcySkills: 010000000000000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000

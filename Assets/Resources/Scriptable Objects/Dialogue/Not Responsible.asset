@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64519a690321cae44979f3dc54493d1e, type: 3}
+  m_Name: Not Responsible
+  m_EditorClassIdentifier: 
+  sourceClip: {fileID: 8300000, guid: c618556d934273048b97fdef6ac9dfd5, type: 3}
+  line: We will not be held responsible, for any hearing imparments, or damage caused
+    to you, for excessive exposure to this sound.
+  index: 3
+  expression: {fileID: 21300014, guid: 61098c502ac09404698168321497d250, type: 3}

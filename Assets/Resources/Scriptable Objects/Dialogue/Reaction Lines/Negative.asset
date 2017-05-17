@@ -9,9 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64519a690321cae44979f3dc54493d1e, type: 3}
-  m_Name: Line
+  m_Name: Negative
   m_EditorClassIdentifier: 
-  sourceClip: {fileID: 0}
-  line: 
+  sourceClip: {fileID: 8300000, guid: 98a17de65a472304ba86e6304dec7975, type: 3}
+  line: Negative!!
   index: 0
-  expression: {fileID: 0}
+  expression: {fileID: 21300008, guid: 61098c502ac09404698168321497d250, type: 3}

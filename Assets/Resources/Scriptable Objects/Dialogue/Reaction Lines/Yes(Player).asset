@@ -9,9 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64519a690321cae44979f3dc54493d1e, type: 3}
-  m_Name: Line 2
+  m_Name: Yes(Player)
   m_EditorClassIdentifier: 
   sourceClip: {fileID: 0}
-  line: 
+  line: Sure
   index: 0
   expression: {fileID: 0}

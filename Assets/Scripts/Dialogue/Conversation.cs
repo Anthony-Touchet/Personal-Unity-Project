@@ -9,25 +9,25 @@ namespace Dialogue
     [RequireComponent(typeof(AudioSource))]
     public class Conversation : MonoBehaviour
     {
-        private AudioSource m_AudioSource;
-        private Line m_CurrentLine;
-        private float m_Timer;
+        private AudioSource m_AudioSource;      // Source for audio
+        private Line m_CurrentLine;             // Current line the System is on
+        private float m_Timer;                  // Timer for waiting
 
-        private bool m_Done;
-        private bool m_ChoiceWaiting;
-        private bool m_Repeat;
-        private bool m_ButtonClicked;
+        private bool m_Done;                    // Is the conversation Over?
+        private bool m_ChoiceWaiting;           // Are we waiting for the player to make a choice?
+        private bool m_Repeat;                  // Are we repeating the current Line?
+        private bool m_ButtonClicked;           // Should we ignore the last button press?
 
-        private GameObject m_DialogueScreen;
-        private List<Line> m_AllLines = new List<Line>();
+        private GameObject m_DialogueScreen;                // Screen we are putting options on
+        private List<Line> m_AllLines = new List<Line>();   // All Line collectively
 
-        private IEnumerator m_CorutineEnumerator;
-    
-        private Transform m_PlayerTransform;
+        private IEnumerator m_CorutineEnumerator;   // Corutine to control Dialogue
 
-        private List<Line> m_ConversationLines = new List<Line>();
-        private List<BranchingLine> m_BrancingLine = new List<BranchingLine>();
-        private List<HubLine> m_HubLines = new List<HubLine>();
+        private Transform m_PlayerTransform;    // player transform for 3D
+
+        private List<Line> m_ConversationLines = new List<Line>();              //
+        private List<BranchingLine> m_BrancingLine = new List<BranchingLine>(); // 
+        private List<HubLine> m_HubLines = new List<HubLine>();                 //
 
         public bool is3D;
         public float range;
@@ -285,9 +285,9 @@ namespace Dialogue
                             buttonComponet.interactable = false;
 
                             buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, 0.5f +
-                                                                                                 lineChoiceSize/2);
+                                lineChoiceSize/2);
                             buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, 0.5f -
-                                                                                                 lineChoiceSize/2);
+                                lineChoiceSize/2);
                         }
                     }
                 });
@@ -336,9 +336,9 @@ namespace Dialogue
                             buttonComponet.interactable = false;
 
                             buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, 0.5f +
-                                                                                                 lineChoiceSize / 2);
+                                lineChoiceSize / 2);
                             buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, 0.5f -
-                                                                                                 lineChoiceSize / 2);
+                                lineChoiceSize / 2);
                         }
                     }
 

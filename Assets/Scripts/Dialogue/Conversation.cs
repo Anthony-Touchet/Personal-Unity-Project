@@ -25,50 +25,31 @@ namespace Dialogue
 
         private Transform m_PlayerTransform;    // player transform for 3D
 
-        private List<Line> m_ConversationLines = new List<Line>();              //
-        private List<BranchingLine> m_BrancingLine = new List<BranchingLine>(); // 
-        private List<HubLine> m_HubLines = new List<HubLine>();                 //
-
-        public bool is3D;
-        public float range;
+        public bool is3D;       // Will this be used in 3D
+        public float range;     // Range for the 3D listening range
         [Space]
-        public float lineChoiceSpacing;
-        [Range(0, 1)] public float lineChoiceSize;
-        public float waitAfterLine;
+        public float lineChoiceSpacing;             // Dialogue Choices spacing
+        [Range(0, 1)] public float lineChoiceSize;  // Controls how large the text will come out
+        public float waitAfterLine;                 // How long to wait after each line
         [Space]
-        public Text lineText;
-        public Image faceExpression;
+        public Text lineText;           // The Text that will display what the line is saying.
+        public Image faceExpression;    // Image that will display the face of the character
 
         [Space]
-        public List<Line> conversationLines;
-        public List<BranchingLine> brancingLine;
-        public List<HubLine> hubLines;
+        public List<Line> conversationLines;        // All conversation lines
+        public List<BranchingLine> brancingLine;    // All Branching Line
+        public List<HubLine> hubLines;              // All Hub Lines
 
+        // Setting up all of the Variables needed
         private void Awake()
         {
-            // Get info
-            foreach (var bl in brancingLine)
-            {
-                m_BrancingLine.Add(Instantiate(bl));
-            }
-
-            foreach (var cl in conversationLines)
-            {
-                m_ConversationLines.Add(Instantiate(cl));
-            }
-
-            foreach (var hl in hubLines)
-            {
-                m_HubLines.Add(Instantiate(hl));
-            }
-
             // Put all the info together
-            m_AllLines.AddRange(m_ConversationLines);
-            foreach (var bl in m_BrancingLine)
+            m_AllLines.AddRange(conversationLines);
+            foreach (var bl in brancingLine)
             {
                 m_AllLines.Add(bl);
             }
-            foreach (var hl in m_HubLines)
+            foreach (var hl in hubLines)
             {
                 m_AllLines.Add(hl);
             }
@@ -76,22 +57,20 @@ namespace Dialogue
             // Sort the Info based on it's position within the the conversation(ie: the index)
             m_AllLines = m_AllLines.OrderBy(l => l.index).ToList();
 
-            if (m_AllLines.Count == 0)
-            {
-                Destroy(this);
-                return;
-            }
-
             m_PlayerTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
             m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
             m_Timer = waitAfterLine;
             m_AudioSource = GetComponent<AudioSource>();
 
+            // If 3D, Stop here.
             if (is3D) return;
+
+            // Else, start Conversation
             RestartDialogue();
             m_CorutineEnumerator = DialogueCoRutine();
         }
 
+        // Unity Update, Primarily used to keep the Dialogue going
         private void Update()
         {
             // 3D Dialogue
@@ -114,7 +93,8 @@ namespace Dialogue
                 }
             }
 
-            // If the player wants to skip the dialogue, Click right mouse button.
+            // If the player wants to skip the dialogue, Click right mouse button and 
+            // make sure we aren't clicking anything else.
             if (Input.GetKeyUp(KeyCode.Mouse0) && !m_ButtonClicked)
             {
                 m_Timer = 0;
@@ -131,6 +111,7 @@ namespace Dialogue
                 m_CorutineEnumerator.MoveNext();
         }
 
+        // Dialogue Corutine. Used as a corutine so it can easily be stopped and restarted
         private IEnumerator DialogueCoRutine()
         {
             while (!m_Done)
@@ -163,34 +144,39 @@ namespace Dialogue
                 // Try to get the next line
                 for (var i = 0; i < m_AllLines.Count; i++)
                 {
-                    if (m_AllLines[i] == m_CurrentLine && i + 1 != m_AllLines.Count)
+                    // Find current line and make sure it is in the list
+                    if (m_AllLines[i] == m_CurrentLine && i + 1 < m_AllLines.Count)
                     {
+                        // Set current line and break out
                         m_CurrentLine = m_AllLines[i + 1];
                         break;
                     }
 
+                    // If not at the end, keep looping
                     if (i + 1 < m_AllLines.Count) continue;
 
+                    // Else end Dialogue
                     EndDialogue();
                     break;
                 }
 
+                // If done, stop looping
                 if (m_Done)
                     break;
 
-                // If the next line is a line, set it up, else
+                // If the next line is a line, play it
                 if (m_CurrentLine.GetType() == typeof(Line))
                 {
                     PlayLine(m_CurrentLine);
                 }
-
+                // else if it is branching, populate buttons and waiting for choice
                 else if (m_CurrentLine.GetType() == typeof(BranchingLine))
                 {
                     PlayLine(m_CurrentLine);
                     PopulateButtons((BranchingLine)m_CurrentLine);
                     m_ChoiceWaiting = true;
                 }
-
+                // else if it is a hub, populate buttons, waiting for choice, repeat
                 else if (m_CurrentLine.GetType() == typeof(HubLine))
                 {
                     PlayLine(m_CurrentLine);
@@ -202,88 +188,87 @@ namespace Dialogue
             yield return null;
         }
 
-        // Dialogue can now be restarted.
-        [ContextMenu("Restart")]
-        public void RestartDialogue()
-        {
-            EndDialogue();
-
-            m_CorutineEnumerator = null;
-            m_CurrentLine = m_AllLines[0];
-            m_Done = false;
-            m_ChoiceWaiting = false;
-            m_Repeat = false;
-
-            m_CorutineEnumerator = DialogueCoRutine();
-            PlayLine(m_CurrentLine);
-
-            m_ButtonClicked = true;
-        }
-
+        // Stop the Dialogue System
         private void EndDialogue()
         {
-            m_CurrentLine = null;
-            m_AudioSource.clip = null;
-            m_Done = true;
-            lineText.text = "";
+            m_CurrentLine = null;       // Clear current Line
+            m_AudioSource.clip = null;  // Clear audio source
+            m_Done = true;              // Done
+            lineText.text = "";         // Clear text
 
+            // If playing audio, stop
             if(m_AudioSource.isPlaying)
                 m_AudioSource.Stop();
 
+            // If we have children on the screen, clear
             if (m_DialogueScreen.transform.childCount <= 0) return;
 
             ClearChoices();
         }
 
+        // Set Audio, words, and face
         private void PlayLine(Line line)
         {
-            lineText.text = line.line;
-            m_AudioSource.clip = line.sourceClip;
-            m_AudioSource.Play();
-            faceExpression.sprite = line.expression;
+            lineText.text = line.line;                  // Set Line Text
+            m_AudioSource.clip = line.sourceClip;       // Set the audio
+            m_AudioSource.Play();                       // Play Audio
+            faceExpression.sprite = line.expression;    // Set face expresion
         }
 
-        [ContextMenu("Spawn Button")]
+        // Populate buttons based off a Branching Line
         private void PopulateButtons(BranchingLine pLine)
         {
-            m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
-
+            // Clear choices to make clean
             ClearChoices();
 
+            // Start from the top of the screen
             var textPlacement = 1f;
             foreach (var reaction in pLine.reactions)
-            {
-                var buttonGameObject = Instantiate(Resources.Load("LineButton")) as GameObject;
-                if (buttonGameObject == null) continue;
-                var buttonTransform = buttonGameObject.GetComponent<RectTransform>();
-                buttonGameObject.transform.SetParent(m_DialogueScreen.transform);
+            {   
+                // Make choice gameObject
+                var buttonGameObject = Instantiate(Resources.Load("LineButton")) as GameObject;    
 
+                // Null check
+                if (buttonGameObject == null) continue;
+
+                var buttonTransform = buttonGameObject.GetComponent<RectTransform>();   // Get Transform
+                buttonGameObject.transform.SetParent(m_DialogueScreen.transform);       // Set to screen
+
+                // Placing text anchors
                 textPlacement -= lineChoiceSpacing;
                 buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, textPlacement);
                 textPlacement -= lineChoiceSize;
                 buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, textPlacement);
 
+                // Zero out offsets
                 buttonTransform.offsetMax = Vector2.zero;
                 buttonTransform.offsetMin = Vector2.zero;
 
+                // Set text
                 buttonTransform.GetComponentInChildren<Text>().text = reaction.playerLine.line;
+
+                // Setting up button Functionality
                 var reaction1 = reaction;
                 var buttonComponet = buttonGameObject.GetComponent<Button>();
                 buttonComponet.onClick.AddListener(() =>
                 {
-                    PlayLine(reaction1.reactionLine);
-                    m_ChoiceWaiting = false;
-                    m_ButtonClicked = true;
+                    PlayLine(reaction1.reactionLine);   // Play Line
+                    m_ChoiceWaiting = false;            // No longer waiting for choice
+                    m_ButtonClicked = true;             // A button has been pressed
 
+                    // Run through all choices to see Buttons
                     foreach (Transform go in m_DialogueScreen.transform)
                     {
+                        // If not the button clicked, Destroy
                         if (go != buttonTransform)
                             Destroy(go.gameObject);
                         else
                         {
+                            // Else, render button to only text
                             buttonComponet.onClick.RemoveAllListeners();
                             buttonComponet.interactable = false;
 
+                            // Center Choice
                             buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, 0.5f +
                                 lineChoiceSize/2);
                             buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, 0.5f -
@@ -294,47 +279,60 @@ namespace Dialogue
             }
         }
 
+        // Populate buttons based off a Hub Line
         private void PopulateButtons(HubLine pLine)
         {
-            m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
-
+            // Clear choices to make clean
             ClearChoices();
 
+            // Start from the top of the screen
             var textPlacement = 1f;
             foreach (var reaction in pLine.choicesList)
             {
+                // Make choice gameObject
                 var buttonGameObject = Instantiate(Resources.Load("LineButton")) as GameObject;
-                if (buttonGameObject == null) continue;
-                var buttonTransform = buttonGameObject.GetComponent<RectTransform>();
-                buttonGameObject.transform.SetParent(m_DialogueScreen.transform);
 
+                // Null check
+                if (buttonGameObject == null) continue;
+
+                var buttonTransform = buttonGameObject.GetComponent<RectTransform>();   // Get Transform
+                buttonGameObject.transform.SetParent(m_DialogueScreen.transform);       // Set to screen
+
+                // Placing text anchors
                 textPlacement -= lineChoiceSpacing;
                 buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, textPlacement);
                 textPlacement -= lineChoiceSize;
                 buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, textPlacement);
 
+                // Zero out offsets
                 buttonTransform.offsetMax = Vector2.zero;
                 buttonTransform.offsetMin = Vector2.zero;
 
+                // Set text
                 buttonTransform.GetComponentInChildren<Text>().text = reaction.playerLine.line;
 
+                // Setting up button Functionality
                 var buttonComponet = buttonGameObject.GetComponent<Button>();
                 var reaction1 = reaction;
                 buttonComponet.onClick.AddListener(() =>
                 {
-                    PlayLine(reaction1.reactionLine);
-                    m_ChoiceWaiting = false;
-                    m_ButtonClicked = true;
+                    PlayLine(reaction1.reactionLine);   // Play Line
+                    m_ChoiceWaiting = false;            // No longer waiting for choice
+                    m_ButtonClicked = true;             // A button has been pressed
 
+                    // Run through all choices to see Buttons
                     foreach (Transform go in m_DialogueScreen.transform)
                     {
+                        // If not the button clicked, Destroy
                         if (go != buttonTransform)
                             Destroy(go.gameObject);
                         else
                         {
+                            // Else, render button to only text
                             buttonComponet.onClick.RemoveAllListeners();
                             buttonComponet.interactable = false;
 
+                            // Center Choice
                             buttonTransform.anchorMax = new Vector2(buttonTransform.anchorMax.x, 0.5f +
                                 lineChoiceSize / 2);
                             buttonTransform.anchorMin = new Vector2(buttonTransform.anchorMin.x, 0.5f -
@@ -342,6 +340,7 @@ namespace Dialogue
                         }
                     }
 
+                    // If Button is first, stop repeating
                     if (pLine.choicesList.IndexOf(reaction1) == 0)
                     {
                         m_Repeat = false;
@@ -350,12 +349,32 @@ namespace Dialogue
             }
         }
 
+        // Destroy all children of the Dialogue screen
         private void ClearChoices()
         {
             foreach (Transform t in m_DialogueScreen.transform)
             {
                 Destroy(t.gameObject);
             }
+        }
+
+        // Used to restart the System
+        [ContextMenu("Restart")]
+        public void RestartDialogue()
+        {
+            // End any current dialog, just to be safe
+            EndDialogue();
+
+            m_CorutineEnumerator = null;    // Clear enumeration
+            m_CurrentLine = m_AllLines[0];  // Set line to first in list
+            m_Done = false;                 // Not Done
+            m_ChoiceWaiting = false;        // Not waiting
+            m_Repeat = false;               // Not repeating
+
+            m_CorutineEnumerator = DialogueCoRutine();  // Restart Corutine
+            PlayLine(m_CurrentLine);                    // Play first line
+
+            m_ButtonClicked = true;                     // Had to click a button to activate restart
         }
     }
 }

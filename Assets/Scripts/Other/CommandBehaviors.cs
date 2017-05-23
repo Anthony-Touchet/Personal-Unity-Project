@@ -106,7 +106,7 @@ public class CommandBehaviors : MonoBehaviour
                 break;
         }
 
-        UpdateBoard(history); 
+        UpdateBoard(history);
     }
 
     public void UpdateBoard(string data)

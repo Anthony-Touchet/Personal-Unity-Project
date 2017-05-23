@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -132,9 +133,10 @@ public class CommandBehaviors : MonoBehaviour
         singleParameters.Add("rotate", RotateCurrent);
         singleParameters.Add("color", ApplyRandomColor);
         singleParameters.Add("spawn", Spawn);
+        singleParameters.Add("remove", RemoveComponet);
 
         threeParameters.Add("rotate", RotateCurrent);
-        threeParameters.Add("moveposition", MovePosition);
+        threeParameters.Add("position", MovePosition);
     }
 
     private void RotateCurrent()
@@ -186,5 +188,22 @@ public class CommandBehaviors : MonoBehaviour
     private void Spawn(string path)
     {
         Instantiate(Resources.Load(path));
+    }
+
+    private void AddComponet(string t)
+    {
+        
+    }
+
+    private void RemoveComponet(string comName)
+    {
+        var componets = m_CurrentGameObject.GetComponents<Component>();
+        foreach (var c in componets)
+        {
+            if (comName != c.GetType().ToString()) continue;
+
+            Destroy(c);
+            break;
+        }
     }
 }

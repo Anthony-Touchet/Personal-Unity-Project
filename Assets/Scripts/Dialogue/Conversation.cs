@@ -169,6 +169,12 @@ namespace Dialogue
                 {
                     PlayLine(m_CurrentLine);
                 }
+                else if (m_CurrentLine.GetType() == typeof(ActionLine))
+                {
+                    PlayLine(m_CurrentLine);
+                    var aL = (ActionLine) m_CurrentLine;
+                    aL.Execute(GameObject.Find("Text (1)"));
+                }
                 // else if it is branching, populate buttons and waiting for choice
                 else if (m_CurrentLine.GetType() == typeof(BranchingLine))
                 {

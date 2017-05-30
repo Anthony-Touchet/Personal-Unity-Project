@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Name: Action Line
   m_EditorClassIdentifier: 
   sourceClip: {fileID: 8300000, guid: bea0605e72aa7ea44a461127bb92b1b6, type: 3}
-  line: beep
-  index: 99
-  expression: {fileID: 21300000, guid: 014ff1ba359d16b4684f813c7cf66990, type: 3}
-  actionType: 1
+  line: (spaceship noises)
+  expression: {fileID: 21300000, guid: 61098c502ac09404698168321497d250, type: 3}
+  actionType: 0

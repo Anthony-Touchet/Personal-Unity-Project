@@ -9,7 +9,6 @@ namespace Dialogue
     {
         public AudioClip sourceClip;
         public string line;
-        public uint index;
         public Sprite expression;
     }
 }

@@ -22,7 +22,6 @@ public class CommandBehaviors : MonoBehaviour
     private Dictionary<string, CommandThreeParameters> threeParameters =
        new Dictionary<string, CommandThreeParameters>();
 
-
     public Text executionText;
     public GameObject canvasGameObject;
 

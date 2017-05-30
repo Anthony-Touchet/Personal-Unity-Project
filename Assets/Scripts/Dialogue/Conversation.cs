@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Dialogue
@@ -37,25 +37,12 @@ namespace Dialogue
 
         [Space]
         public List<Line> conversationLines;        // All conversation lines
-        public List<BranchingLine> brancingLine;    // All Branching Line
-        public List<HubLine> hubLines;              // All Hub Lines
 
         // Setting up all of the Variables needed
         private void Awake()
         {
             // Put all the info together
             m_AllLines.AddRange(conversationLines);
-            foreach (var bl in brancingLine)
-            {
-                m_AllLines.Add(bl);
-            }
-            foreach (var hl in hubLines)
-            {
-                m_AllLines.Add(hl);
-            }
-
-            // Sort the Info based on it's position within the the conversation(ie: the index)
-            m_AllLines = m_AllLines.OrderBy(l => l.index).ToList();
 
             m_PlayerTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
             m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
@@ -173,7 +160,7 @@ namespace Dialogue
                 {
                     PlayLine(m_CurrentLine);
                     var aL = (ActionLine) m_CurrentLine;
-                    aL.Execute(GameObject.Find("Text (1)"));
+                    aL.Execute(FindObjectOfType<Camera>().gameObject);
                 }
                 // else if it is branching, populate buttons and waiting for choice
                 else if (m_CurrentLine.GetType() == typeof(BranchingLine))
@@ -365,7 +352,7 @@ namespace Dialogue
         }
 
         // Used to restart the System
-        [ContextMenu("Restart")]
+        [ContextMenu("Restart Dialogue")]
         public void RestartDialogue()
         {
             // End any current dialog, just to be safe
@@ -381,6 +368,13 @@ namespace Dialogue
             PlayLine(m_CurrentLine);                    // Play first line
 
             m_ButtonClicked = true;                     // Had to click a button to activate restart
+        }
+
+        // Used to restart the scene and revert any actions taken
+        [ContextMenu("Scene Restart")]
+        public void RestartScene()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }

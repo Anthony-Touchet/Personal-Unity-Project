@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Other;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -14,18 +16,27 @@ public class CommandBehaviors : MonoBehaviour
 
     public delegate void Command();
     public delegate void CommandSingleParameter(string s);
+    public delegate void CommandDoubleParameter(string s1, string s2);
     public delegate void CommandThreeParameters(string s1, string s2, string s3);
 
-    private Dictionary<string, Command> commandDictionary = new Dictionary<string, Command>();
-    private Dictionary<string, CommandSingleParameter> singleParameters = 
+    // Command with only names
+    private readonly Dictionary<string, Command> commandDictionary = new Dictionary<string, Command>();
+
+    // Comands that take in one parameter
+    private readonly Dictionary<string, CommandSingleParameter> singleParameters = 
         new Dictionary<string, CommandSingleParameter>();
-    private Dictionary<string, CommandThreeParameters> threeParameters =
+
+    // Commands that take in two parameters
+    private readonly Dictionary<string, CommandDoubleParameter> doubleParameters =
+    new Dictionary<string, CommandDoubleParameter>();
+
+    // Commands that take in three parameters.
+    private readonly Dictionary<string, CommandThreeParameters> threeParameters =
        new Dictionary<string, CommandThreeParameters>();
 
     public Text executionText;
     public GameObject canvasGameObject;
 
-	// Use this for initialization
 	private void Awake ()
 	{
 	    AddFunctions();
@@ -36,8 +47,7 @@ public class CommandBehaviors : MonoBehaviour
 
         canvasGameObject.SetActive(m_CommandProptUp);
 	}
-	
-	// Update is called once per frame
+
 	private void Update ()
 	{
 	    if (Input.GetKeyUp(KeyCode.BackQuote))
@@ -51,19 +61,18 @@ public class CommandBehaviors : MonoBehaviour
 	        return;
 
 	    // Get an object
-        if (Input.GetKeyUp(KeyCode.Mouse0) && EventSystem.current.currentSelectedGameObject == null)
-        {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+	    if (!Input.GetKeyUp(KeyCode.Mouse0) || EventSystem.current.currentSelectedGameObject != null) return;
 
-            Physics.Raycast(ray, out hit);
+	    var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+	    RaycastHit hit;
 
-            if (hit.transform == null)
-                return;
+	    Physics.Raycast(ray, out hit);
 
-            m_CurrentGameObject = hit.transform.gameObject;
-            UpdateBoard(m_CurrentGameObject.name + " was selected.\n");
-        }
+	    if (hit.transform == null)
+	        return;
+
+	    m_CurrentGameObject = hit.transform.gameObject;
+	    UpdateBoard(m_CurrentGameObject.name + " was selected.\n");
 	}
 
     public void CommandExecute()
@@ -86,6 +95,15 @@ public class CommandBehaviors : MonoBehaviour
                 try
                 {
                     singleParameters[parameters[0]].Invoke(parameters[1]);
+                }
+                catch
+                { history += "ERROR!!\n"; }
+                break;
+
+            case 3:
+                try
+                {
+                    doubleParameters[parameters[0]].Invoke(parameters[1], parameters[2]);
                 }
                 catch
                 { history += "ERROR!!\n"; }
@@ -133,6 +151,10 @@ public class CommandBehaviors : MonoBehaviour
         singleParameters.Add("color", ApplyRandomColor);
         singleParameters.Add("spawn", Spawn);
         singleParameters.Add("remove", RemoveComponet);
+        singleParameters.Add("add", AddComponet);
+
+        doubleParameters.Add("float", FloatGameObject);
+        doubleParameters.Add("rotate", RotateCurrent);
 
         threeParameters.Add("rotate", RotateCurrent);
         threeParameters.Add("position", MovePosition);
@@ -149,6 +171,27 @@ public class CommandBehaviors : MonoBehaviour
         var mag = float.Parse(s);
         var r = m_CurrentGameObject.AddComponent<RotateGameObject>();
         r.angle = Vector3.up * mag;
+    }
+
+    private void RotateCurrent(string axis, string angle)
+    {
+        var angleValue = float.Parse(angle);
+        switch (axis)
+        {
+            case "x":
+                m_CurrentGameObject.transform.Rotate(Vector3.right, angleValue);
+                break;
+            case "y":
+                m_CurrentGameObject.transform.Rotate(Vector3.up, angleValue);
+                break;
+            case "z":
+                m_CurrentGameObject.transform.Rotate(Vector3.forward, angleValue);
+                break;
+
+            default:
+                throw new Exception("No Axis Found");
+                break;
+        }
     }
 
     private void RotateCurrent(string s1, string s2, string s3)
@@ -189,9 +232,20 @@ public class CommandBehaviors : MonoBehaviour
         Instantiate(Resources.Load(path));
     }
 
-    private void AddComponet(string t)
+    private void AddComponet(string comp)
     {
-        
+        var assembly = Assembly.GetExecutingAssembly();
+
+        var typelist = assembly.GetTypes().Where(t => string.Equals(t.Namespace, "Other", 
+            StringComparison.Ordinal)).ToArray();
+
+        foreach (var type in typelist)
+        {
+            if (type.ToString() == "Other." + comp)
+            {
+                m_CurrentGameObject.AddComponent(type);
+            }
+        }
     }
 
     private void RemoveComponet(string comName)
@@ -204,5 +258,15 @@ public class CommandBehaviors : MonoBehaviour
             Destroy(c);
             break;
         }
+    }
+
+    private void FloatGameObject(string mag, string time)
+    {
+        var magValue = float.Parse(mag);
+        var timeValue = float.Parse(time);
+
+        var floatComp = m_CurrentGameObject.AddComponent<Floating>();
+        floatComp.magnitude = magValue;
+        floatComp.time = timeValue;
     }
 }

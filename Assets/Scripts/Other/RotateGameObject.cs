@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 
-public class RotateGameObject : MonoBehaviour
+namespace Other
 {
-    public Vector3 angle;
-
-	private void Update ()
+    public class RotateGameObject : MonoBehaviour
     {
-        transform.Rotate(angle * Time.deltaTime);
-	}
+        public Vector3 angle;
+
+        private void Update ()
+        {
+            transform.Rotate(angle * Time.deltaTime);
+        }
+    }
 }

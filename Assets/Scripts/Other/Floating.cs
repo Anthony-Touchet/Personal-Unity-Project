@@ -1,0 +1,41 @@
+﻿using UnityEngine;
+
+namespace Other
+{
+    public class Floating : MonoBehaviour
+    {
+        private Vector3 min;
+        private Vector3 max;
+        private float m_DistancePerSec;
+        private bool m_Rising = true;
+
+        public float magnitude = 5f;
+        public float time = 1f;
+
+        private void Awake()
+        {
+            min = transform.position;
+            max = new Vector3(min.x, min.y + magnitude, min.z);
+            m_DistancePerSec = magnitude/time;
+        }
+
+        private void Update()
+        {
+            // Move GameObject
+            if (m_Rising)
+            {
+                transform.position += new Vector3(0, m_DistancePerSec * Time.deltaTime, 0);
+            }
+            else
+            {
+                transform.position -= new Vector3(0, m_DistancePerSec * Time.deltaTime, 0);
+            }
+
+            // See if need to move in other direction
+            if (transform.position.y > max.y && m_Rising)
+                m_Rising = false;
+            else if (transform.position.y < min.y && !m_Rising)
+                m_Rising = true;
+        }
+    }
+}

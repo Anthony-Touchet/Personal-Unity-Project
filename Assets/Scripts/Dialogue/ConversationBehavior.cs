@@ -6,8 +6,15 @@ using UnityEngine.UI;
 
 namespace Dialogue
 {
+
+    // TODO: Seperate Conversation so that there is room to expand. EX: so it can be modular for 2D and 3D
+    public class Conversation
+    {
+        public List<Line> conversationLines;        // All conversation lines
+    }
+
     [RequireComponent(typeof(AudioSource))]
-    public class Conversation : MonoBehaviour
+    public class ConversationBehavior : MonoBehaviour
     {
         private AudioSource m_AudioSource;      // Source for audio
         private Line m_CurrentLine;             // Current line the System is on
@@ -35,14 +42,13 @@ namespace Dialogue
         public Text lineText;           // The Text that will display what the line is saying.
         public Image faceExpression;    // Image that will display the face of the character
 
-        [Space]
-        public List<Line> conversationLines;        // All conversation lines
+        [Space] public Conversation conversation;
 
         // Setting up all of the Variables needed
         private void Awake()
         {
             // Put all the info together
-            m_AllLines.AddRange(conversationLines);
+            m_AllLines.AddRange(conversation.conversationLines);
 
             m_PlayerTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
             m_DialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");

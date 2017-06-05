@@ -17,6 +17,7 @@ namespace Dialogue
             mDialogueScreen = GameObject.FindGameObjectWithTag("DialogueCanvas");
             mTimer = waitAfterLine;
             mAudioSource = GetComponent<AudioSource>();
+            mAudioSource.maxDistance = range;
         }
 	
         protected override void Update ()

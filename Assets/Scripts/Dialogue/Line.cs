@@ -1,4 +1,7 @@
-﻿using System;
+﻿//This class is the base of all lines. If a normal line is to be played, the information will simply be
+// displayed and the audio will begin to play.
+
+using System;
 using UnityEngine;
 
 namespace Dialogue

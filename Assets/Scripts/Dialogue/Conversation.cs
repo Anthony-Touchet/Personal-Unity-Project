@@ -150,24 +150,6 @@ namespace Dialogue
             yield return null;
         }
 
-        // Stop the Dialogue System
-        protected void EndDialogue()
-        {
-            mCurrentLine = null;       // Clear current Line
-            mAudioSource.clip = null;  // Clear audio source
-            mDone = true;              // Done
-            lineText.text = "";         // Clear text
-
-            // If playing audio, stop
-            if(mAudioSource.isPlaying)
-                mAudioSource.Stop();
-
-            // If we have children on the screen, clear
-            if (mDialogueScreen.transform.childCount <= 0) return;
-
-            ClearChoices();
-        }
-
         // Set Audio, words, and face
         protected virtual void PlayLine(Line line)
         {
@@ -317,6 +299,24 @@ namespace Dialogue
             {
                 Destroy(t.gameObject);
             }
+        }
+
+        // Stop the Dialogue System
+        public void EndDialogue()
+        {
+            mCurrentLine = null;       // Clear current Line
+            mAudioSource.clip = null;  // Clear audio source
+            mDone = true;              // Done
+            lineText.text = "";         // Clear text
+
+            // If playing audio, stop
+            if(mAudioSource.isPlaying)
+                mAudioSource.Stop();
+
+            // If we have children on the screen, clear
+            if (mDialogueScreen.transform.childCount <= 0) return;
+
+            ClearChoices();
         }
 
         // Used to restart the System

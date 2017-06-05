@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+This class is designed to allow an action after the line has been spoken. The function will need a target 
+to preform the action on.
+*/
+
+using System;
 using Other;
 using UnityEngine;
 using UnityEngine.UI;

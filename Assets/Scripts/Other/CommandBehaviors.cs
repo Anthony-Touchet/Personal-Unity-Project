@@ -190,7 +190,6 @@ public class CommandBehaviors : MonoBehaviour
 
             default:
                 throw new Exception("No Axis Found");
-                break;
         }
     }
 
@@ -237,7 +236,7 @@ public class CommandBehaviors : MonoBehaviour
         var assembly = Assembly.GetExecutingAssembly();
 
         var typelist = assembly.GetTypes().Where(t => string.Equals(t.Namespace, "Other", 
-            StringComparison.Ordinal)).ToArray();
+            StringComparison.Ordinal)).ToList();
 
         foreach (var type in typelist)
         {

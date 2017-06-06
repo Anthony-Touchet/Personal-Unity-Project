@@ -8,3 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AudioTest.unity
     guid: 863f7a9c42101a047bc8e3b6fa4c4da8
+  - enabled: 1
+    path: Assets/Scenes/GameTest.unity
+    guid: 62239c97db6679142b59f30c7d341bdc

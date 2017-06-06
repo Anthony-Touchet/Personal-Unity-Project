@@ -13,7 +13,7 @@ namespace Other
         private GameObject m_CurrentGameObject;
         private InputField m_InputField;
         private bool m_CommandProptUp;
-        private CameraControl camControl;
+        private FirstPersonCamera camControl;
 
         public delegate void Command();
         public delegate void CommandSingleParameter(string s);
@@ -42,7 +42,7 @@ namespace Other
         private void Awake ()
         {
             AddFunctions();
-            camControl = FindObjectOfType<CameraControl>();
+            camControl = FindObjectOfType<FirstPersonCamera>();
             m_InputField = FindObjectOfType<InputField>();
             m_CurrentGameObject = null;
             executionText.text = "";
@@ -64,7 +64,8 @@ namespace Other
                 return;
 
             // Get an object
-            if (!Input.GetKeyUp(KeyCode.Mouse0) || EventSystem.current.currentSelectedGameObject != null) return;
+            if (!Input.GetKeyUp(KeyCode.Mouse0) || EventSystem.current.currentSelectedGameObject != null)
+                return;
 
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -72,6 +73,9 @@ namespace Other
             Physics.Raycast(ray, out hit);
 
             if (hit.transform == null)
+                return;
+
+            if (hit.transform.gameObject.tag != "Commandable")
                 return;
 
             m_CurrentGameObject = hit.transform.gameObject;
@@ -159,7 +163,7 @@ namespace Other
             doubleParameters.Add("rotate", RotateCurrent);
 
             threeParameters.Add("rotate", RotateCurrent);
-            threeParameters.Add("position", MovePosition);
+            threeParameters.Add("move", MovePosition);
             threeParameters.Add("color", ApplyColor);
         }
 
@@ -232,7 +236,7 @@ namespace Other
         private void MovePosition(string x, string y, string z)
         {
             var pos = new Vector3(float.Parse(x), float.Parse(y), float.Parse(z));
-            m_CurrentGameObject.transform.position = pos;
+            m_CurrentGameObject.transform.position += pos;
         }
 
         private void Spawn(string path)

@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
 
-public class DestroyOnTimer : MonoBehaviour
+namespace Other
 {
-    public float time;
-
-	// Use this for initialization
-	private void Update ()
+    public class DestroyOnTimer : MonoBehaviour
     {
-		if(time < 0)
-            Destroy(gameObject);
-        time -= Time.deltaTime;
-    }	
+        public float time;
+
+        // Use this for initialization
+        private void Update ()
+        {
+            if(time < 0)
+                Destroy(gameObject);
+            time -= Time.deltaTime;
+        }	
 	
+    }
 }

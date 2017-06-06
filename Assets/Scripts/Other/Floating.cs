@@ -9,14 +9,13 @@ namespace Other
         private float m_DistancePerSec;
         private bool m_Rising = true;
 
-        public float magnitude = 5f;
-        public float time = 1f;
+        public float magnitude;
 
-        private void Awake()
-        {
+        private void Start()
+        { 
             min = transform.position;
             max = new Vector3(min.x, min.y + magnitude, min.z);
-            m_DistancePerSec = magnitude/time;
+            m_DistancePerSec = 5;
         }
 
         private void Update()

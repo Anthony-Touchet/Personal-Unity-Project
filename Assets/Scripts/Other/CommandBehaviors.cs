@@ -158,8 +158,8 @@ namespace Other
             singleParameters.Add("spawn", Spawn);
             singleParameters.Add("remove", RemoveComponet);
             singleParameters.Add("add", AddComponet);
+            singleParameters.Add("float", FloatGameObject);
 
-            doubleParameters.Add("float", FloatGameObject);
             doubleParameters.Add("rotate", RotateCurrent);
 
             threeParameters.Add("rotate", RotateCurrent);
@@ -212,16 +212,29 @@ namespace Other
         private void DestroyCurrent()
         {
             Destroy(m_CurrentGameObject);
+
+            var obj = Resources.Load("Destroy Particles") as GameObject;
+            if(!obj) return;
+
+            obj = Instantiate(obj);
+
+            obj.transform.position = m_CurrentGameObject.transform.position;
         }
 
         private void ApplyRandomColor()
         {
+            if (m_CurrentGameObject.transform.GetComponent<RandomColor>())
+                throw new Exception();
+
             var c = m_CurrentGameObject.AddComponent<RandomColor>();
             c.waitTime = .1f;
         }
 
         private void ApplyRandomColor(string wait)
         {
+            if (m_CurrentGameObject.transform.GetComponent<RandomColor>())
+                throw new Exception();
+
             var waitTime = float.Parse(wait);
             var c = m_CurrentGameObject.AddComponent<RandomColor>();
             c.waitTime = waitTime;
@@ -272,14 +285,15 @@ namespace Other
             }
         }
 
-        private void FloatGameObject(string mag, string time)
+        private void FloatGameObject(string mag)
         {
+            if (m_CurrentGameObject.transform.GetComponent<Floating>())
+                throw new Exception();
+
             var magValue = float.Parse(mag);
-            var timeValue = float.Parse(time);
 
             var floatComp = m_CurrentGameObject.AddComponent<Floating>();
             floatComp.magnitude = magValue;
-            floatComp.time = timeValue;
         }
     }
 }

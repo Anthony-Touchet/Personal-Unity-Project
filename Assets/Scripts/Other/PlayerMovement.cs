@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.transform.up == Vector3.up && transform.position.y > other.transform.position.y)
-            m_CanJump = true;
+        // TODO: Check to see if gameObject is on top of another.
+        m_CanJump = true;
     }
 }

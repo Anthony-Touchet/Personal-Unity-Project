@@ -266,10 +266,11 @@ namespace Other
 
             foreach (var type in typelist)
             {
-                if (type.ToString() == "Other." + comp)
-                {
-                    m_CurrentGameObject.AddComponent(type);
-                }
+                if (type.ToString() != "Other." + comp) continue;
+
+                if(m_CurrentGameObject.GetComponent(type))
+                    Destroy(m_CurrentGameObject.GetComponent(type));
+                m_CurrentGameObject.AddComponent(type);
             }
         }
 
@@ -288,7 +289,7 @@ namespace Other
         private void FloatGameObject(string mag)
         {
             if (m_CurrentGameObject.transform.GetComponent<Floating>())
-                throw new Exception();
+                Destroy(m_CurrentGameObject.transform.GetComponent<Floating>());
 
             var magValue = float.Parse(mag);
 

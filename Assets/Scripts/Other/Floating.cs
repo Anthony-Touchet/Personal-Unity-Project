@@ -2,6 +2,7 @@
 
 namespace Other
 {
+    [CustomAttributte("Baaaalllll")]
     public class Floating : MonoBehaviour
     {
         private Vector3 min;

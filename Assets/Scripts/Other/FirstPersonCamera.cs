@@ -2,11 +2,9 @@
 
 namespace Other
 {
-    [RequireComponent(typeof(Rigidbody))]
     public class FirstPersonCamera : MonoBehaviour
     {
         private Transform m_CameraTransform;
-        private Rigidbody m_Rigidbody;
         public float rotationSpeed;
         public float movementSpeed;
 
@@ -14,21 +12,10 @@ namespace Other
         {
             // Get camera in child
             m_CameraTransform = transform.GetComponentInChildren<Camera>().transform;
-
-            m_Rigidbody = GetComponent<Rigidbody>();
         }
 
         private void Update()
         {
-            var movement = new Vector3();
-
-            // Get Regular movement
-            movement += transform.forward * Input.GetAxisRaw("Vertical");
-            movement += transform.right * Input.GetAxisRaw("Horizontal");
-
-            // Scale Movement and add Mouse scroll
-            m_Rigidbody.position += (movement.normalized * movementSpeed * Time.deltaTime);
-
             var horizontal = Input.GetAxis("Mouse X");  // how much is mouse moving on the X
             var vertical = Input.GetAxis("Mouse Y");    // how much is mouse moving on the Y
 

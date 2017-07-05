@@ -13,7 +13,6 @@ namespace Other
         private GameObject m_CurrentGameObject;
         private InputField m_InputField;
         private bool m_CommandProptUp;
-        private FirstPersonCamera camControl;
 
         public delegate void Command();
         public delegate void CommandSingleParameter(string s);
@@ -21,18 +20,18 @@ namespace Other
         public delegate void CommandThreeParameters(string s1, string s2, string s3);
 
         // Command with only names
-        private readonly Dictionary<string, Command> commandDictionary = new Dictionary<string, Command>();
+        private readonly Dictionary<string, Command> m_CommandDictionary = new Dictionary<string, Command>();
 
         // Comands that take in one parameter
-        private readonly Dictionary<string, CommandSingleParameter> singleParameters = 
+        private readonly Dictionary<string, CommandSingleParameter> m_SingleParameters = 
             new Dictionary<string, CommandSingleParameter>();
 
         // Commands that take in two parameters
-        private readonly Dictionary<string, CommandDoubleParameter> doubleParameters =
+        private readonly Dictionary<string, CommandDoubleParameter> m_DoubleParameters =
             new Dictionary<string, CommandDoubleParameter>();
 
         // Commands that take in three parameters.
-        private readonly Dictionary<string, CommandThreeParameters> threeParameters =
+        private readonly Dictionary<string, CommandThreeParameters> m_ThreeParameters =
             new Dictionary<string, CommandThreeParameters>();
 
         public Text executionText;
@@ -42,7 +41,6 @@ namespace Other
         private void Awake ()
         {
             AddFunctions();
-            camControl = FindObjectOfType<FirstPersonCamera>();
             m_InputField = FindObjectOfType<InputField>();
             m_CurrentGameObject = null;
             executionText.text = "";
@@ -57,7 +55,6 @@ namespace Other
             {
                 m_CommandProptUp = !m_CommandProptUp;
                 canvasGameObject.SetActive(m_CommandProptUp);
-                camControl.enabled = !m_CommandProptUp;
             }
 
             if (m_CommandProptUp == false)
@@ -75,7 +72,7 @@ namespace Other
             if (hit.transform == null)
                 return;
 
-            if (hit.transform.gameObject.tag != "Commandable")
+            if (!hit.transform.gameObject.CompareTag("Commandable"))
                 return;
 
             m_CurrentGameObject = hit.transform.gameObject;
@@ -92,7 +89,7 @@ namespace Other
                 case 1:
                     try
                     {
-                        commandDictionary[parameters[0]].Invoke();
+                        m_CommandDictionary[parameters[0]].Invoke();
                     }
                     catch
                     { history += "ERROR!!\n"; }
@@ -101,7 +98,7 @@ namespace Other
                 case 2:
                     try
                     {
-                        singleParameters[parameters[0]].Invoke(parameters[1]);
+                        m_SingleParameters[parameters[0]].Invoke(parameters[1]);
                     }
                     catch
                     { history += "ERROR!!\n"; }
@@ -110,7 +107,7 @@ namespace Other
                 case 3:
                     try
                     {
-                        doubleParameters[parameters[0]].Invoke(parameters[1], parameters[2]);
+                        m_DoubleParameters[parameters[0]].Invoke(parameters[1], parameters[2]);
                     }
                     catch
                     { history += "ERROR!!\n"; }
@@ -119,7 +116,7 @@ namespace Other
                 case 4:
                     try
                     {
-                        threeParameters[parameters[0]].Invoke(parameters[1], parameters[2], parameters[3]);
+                        m_ThreeParameters[parameters[0]].Invoke(parameters[1], parameters[2], parameters[3]);
                     }
                     catch
                     { history += "ERROR!!\n"; }
@@ -149,22 +146,22 @@ namespace Other
 
         private void AddFunctions()
         {
-            commandDictionary.Add("destroy", DestroyCurrent);
-            commandDictionary.Add("rotate", RotateCurrent);
-            commandDictionary.Add("color", ApplyRandomColor);
+            m_CommandDictionary.Add("destroy", DestroyCurrent);
+            m_CommandDictionary.Add("rotate", RotateCurrent);
+            m_CommandDictionary.Add("color", ApplyRandomColor);
 
-            singleParameters.Add("rotate", RotateCurrent);
-            singleParameters.Add("color", ApplyRandomColor);
-            singleParameters.Add("spawn", Spawn);
-            singleParameters.Add("remove", RemoveComponet);
-            singleParameters.Add("add", AddComponet);
-            singleParameters.Add("float", FloatGameObject);
+            m_SingleParameters.Add("rotate", RotateCurrent);
+            m_SingleParameters.Add("color", ApplyRandomColor);
+            m_SingleParameters.Add("spawn", Spawn);
+            m_SingleParameters.Add("remove", RemoveComponet);
+            m_SingleParameters.Add("add", AddComponet);
+            m_SingleParameters.Add("float", FloatGameObject);
 
-            doubleParameters.Add("rotate", RotateCurrent);
+            m_DoubleParameters.Add("rotate", RotateCurrent);
 
-            threeParameters.Add("rotate", RotateCurrent);
-            threeParameters.Add("move", MovePosition);
-            threeParameters.Add("color", ApplyColor);
+            m_ThreeParameters.Add("rotate", RotateCurrent);
+            m_ThreeParameters.Add("move", MovePosition);
+            m_ThreeParameters.Add("color", ApplyColor);
         }
 
         private void RotateCurrent()

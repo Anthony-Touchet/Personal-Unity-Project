@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement3D : MonoBehaviour
 {
     private Rigidbody m_Rigidbody;
     private bool m_CanJump = true;

@@ -57,9 +57,6 @@ namespace GameMechanics
                 canvasGameObject.SetActive(m_CommandProptUp);
             }
 
-            if (m_CommandProptUp == false)
-                return;
-
             // Get an object
             if (!Input.GetKeyUp(KeyCode.Mouse0) || EventSystem.current.currentSelectedGameObject != null)
                 return;

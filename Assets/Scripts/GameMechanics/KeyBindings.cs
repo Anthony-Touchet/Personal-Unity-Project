@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GameMechanics;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,9 +13,10 @@ public class KeyBindings : MonoBehaviour
         public string input;
         public KeyCode KeyCode { get; private set; }
 
-        public KeyBinding(KeyCode keyCode)
+        public KeyBinding(KeyCode keyCode, string p_Input)
         {
             KeyCode = keyCode;
+            input = p_Input;
         }
     }
 
@@ -22,17 +24,12 @@ public class KeyBindings : MonoBehaviour
 
     private void Awake()
     {
-        var start = 48;
-        for (var i = 0; i < 9; i++)
-        {
-            keyBindings.Add(new KeyBinding((KeyCode)start + i));
-        }
-
-        keyBindings[1].input = "destroy";
+        var m_PrivateKeyBindings = 
+            keyBindings.Select(keyBinding => new KeyBinding((KeyCode) 48 + keyBindings.IndexOf(keyBinding), keyBinding.input)).ToList();
+        keyBindings = m_PrivateKeyBindings;
     }
 
-	// Update is called once per frame
-	void Update ()
+	private void Update ()
     {
         foreach (var keyBinding in keyBindings)
         {

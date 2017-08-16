@@ -17,7 +17,7 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     private void Awake()
     {
         if(self != this)
-            Destroy(this);
+            Destroy(gameObject);
 
         SubAwake();
     }

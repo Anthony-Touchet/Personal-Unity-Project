@@ -22,5 +22,5 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
         SubAwake();
     }
 
-    public virtual void SubAwake() { }
+    public virtual void SubAwake(){}
 }

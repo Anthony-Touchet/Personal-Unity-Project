@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Genaric;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -37,6 +38,7 @@ public class PlayerMovement2D : MonoBehaviour
 
         m_Rigidbody.AddForce(Vector3.up * jumpPower * 10, ForceMode.Impulse);
         m_CanJump = false;
+        AudioManager.self.PlaySound("Jump");
     }
 
     private void OnCollisionEnter(Collision other)

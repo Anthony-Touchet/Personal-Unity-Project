@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace Genaric
 {
-    [RequireComponent(typeof(AudioSource), typeof(AudioSource))]
+    [RequireComponent(typeof(AudioSource))]
     public class AudioManager : MonoSingleton<AudioManager>
     {
         [Serializable]
